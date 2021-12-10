@@ -2,4 +2,3 @@ cabot_alert_email
 cabot_alert_hipchat
 cabot_alert_twilio
 cabot_alert_slack
-cabot_check_cloudwatch
