@@ -10,6 +10,7 @@ from cabot.cabotapp.models import (
 
 from .tests_basic import LocalTestCase
 
+
 class TestICMPCheckRun(LocalTestCase):
 
     def setUp(self):

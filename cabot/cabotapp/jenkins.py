@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-
 from datetime import datetime
 
 import jenkins
@@ -14,6 +12,7 @@ def _get_jenkins_client(jenkins_config):
     return jenkins.Jenkins(jenkins_config.jenkins_api,
                            username=jenkins_config.jenkins_user,
                            password=jenkins_config.jenkins_pass)
+
 
 def get_job_status(jenkins_config, jobname):
     ret = {

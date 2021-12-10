@@ -4,3 +4,5 @@ freezegun
 mock
 ipdb
 isort
+setuptools
+pip

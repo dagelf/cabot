@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-from urlparse import urlparse
-
+from urllib.parse import urlparse
 from django.contrib.auth import get_user_model
 from django.shortcuts import resolve_url
 from django.test import TestCase

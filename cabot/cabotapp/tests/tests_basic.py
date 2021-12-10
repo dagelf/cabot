@@ -21,7 +21,7 @@ from django.conf import settings
 from django.contrib.auth.models import Permission
 from django.contrib.auth.models import User
 from django.core import mail
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.test.client import Client
 from django.test.utils import override_settings
 from django.test import TestCase
@@ -178,7 +178,7 @@ def jenkins_blocked_response(*args, **kwargs):
 def fake_http_200_response(*args, **kwargs):
     resp = Mock()
     resp.content = get_content('http_response.html')
-    resp.text = unicode(resp.content, 'utf-8')
+    resp.text = resp.content.decode('utf-8')
     resp.status_code = 200
     return resp
 
@@ -186,7 +186,7 @@ def fake_http_200_response(*args, **kwargs):
 def fake_http_404_response(*args, **kwargs):
     resp = Mock()
     resp.content = get_content('http_response.html')
-    resp.text = unicode(resp.content, 'utf-8')
+    resp.text = resp.content.decode('utf-8')
     resp.status_code = 404
     return resp
 

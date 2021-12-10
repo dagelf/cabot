@@ -66,6 +66,7 @@ def default_calculate_debounced_passing(recent_results, debounce=0):
             return True
     return False
 
+
 def get_custom_check_plugins():
     custom_check_types = []
     check_subclasses = StatusCheck.__subclasses__()
@@ -83,14 +84,12 @@ def get_custom_check_plugins():
             continue
 
         check_name = check.check_name
-        custom_check = {}
-        custom_check['creation_url'] = "create-" + check_name + "-check"
-        custom_check['check_name'] = check_name
-        custom_check['icon_class'] = getattr(check, "icon_class", "glyphicon-ok")
-        custom_check['objects'] = check.objects
+        custom_check = {'creation_url': "create-" + check_name + "-check", 'check_name': check_name,
+                        'icon_class': getattr(check, "icon_class", "glyphicon-ok"), 'objects': check.objects}
         custom_check_types.append(custom_check)
 
     return custom_check_types
+
 
 class CheckGroupMixin(models.Model):
     class Meta:
@@ -195,13 +194,14 @@ class CheckGroupMixin(models.Model):
             # Don't alert every time
             if self.overall_status == self.WARNING_STATUS:
                 if self.last_alert_sent and (
-                    timezone.now() - timedelta(minutes=settings.NOTIFICATION_INTERVAL)) < self.last_alert_sent:
+                        timezone.now() - timedelta(minutes=settings.NOTIFICATION_INTERVAL)) < self.last_alert_sent:
                     return
             elif self.overall_status in (self.CRITICAL_STATUS, self.ERROR_STATUS):
                 more_important = self.old_overall_status == self.WARNING_STATUS or \
-                    (self.old_overall_status == self.ERROR_STATUS and self.overall_status == self.CRITICAL_STATUS)
+                                 (
+                                             self.old_overall_status == self.ERROR_STATUS and self.overall_status == self.CRITICAL_STATUS)
                 if not more_important and self.last_alert_sent and (
-                    timezone.now() - timedelta(minutes=settings.ALERT_INTERVAL)) < self.last_alert_sent:
+                        timezone.now() - timedelta(minutes=settings.ALERT_INTERVAL)) < self.last_alert_sent:
                     return
             self.last_alert_sent = timezone.now()
         else:
@@ -473,7 +473,7 @@ class StatusCheck(PolymorphicModel):
     endpoint = models.TextField(
         null=True,
         help_text='HTTP(S) endpoint to poll.',
-        validators = [URLValidator()],
+        validators=[URLValidator()],
     )
     username = models.TextField(
         blank=True,
@@ -647,7 +647,6 @@ def minimize_targets(targets):
 
 
 class GraphiteStatusCheck(StatusCheck):
-
     class Meta(StatusCheck.Meta):
         proxy = True
 
@@ -754,7 +753,7 @@ class HttpStatusCheck(StatusCheck):
 
     @classmethod
     def _check_content_pattern(self, text_match, content):
-        content = content if isinstance(content, unicode) else unicode(content, "UTF-8")
+        content = content.decode("UTF-8")
         return re.search(text_match, content)
 
     def _run(self):
@@ -852,9 +851,10 @@ class StatusCheckResult(models.Model):
             return self.error
 
     def save(self, *args, **kwargs):
-        if isinstance(self.raw_data, basestring):
+        if isinstance(self.raw_data, str):
             self.raw_data = self.raw_data[:RAW_DATA_LIMIT]
         return super(StatusCheckResult, self).save(*args, **kwargs)
+
 
 class AlertAcknowledgement(models.Model):
     time = models.DateTimeField()
@@ -901,9 +901,11 @@ class UserProfile(models.Model):
     hipchat_alias = models.CharField(max_length=50, blank=True, default='')
     fallback_alert_user = models.BooleanField(default=False)
 
+
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user=instance)
+
 
 post_save.connect(create_user_profile, sender=settings.AUTH_USER_MODEL)
 
@@ -959,7 +961,7 @@ def update_shifts():
             user = user_lookup[e]
             # Delete any events that have been updated in ical
             Shift.objects.filter(uid=event['uid'],
-                last_modified__lt=event['last_modified']).delete()
+                                 last_modified__lt=event['last_modified']).delete()
             Shift.objects.get_or_create(
                 uid=event['uid'],
                 start=event['start'],
