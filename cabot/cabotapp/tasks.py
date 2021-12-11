@@ -1,7 +1,6 @@
 import logging
 import random
 
-from celery.task import task
 from celery import Celery
 from django.conf import settings
 from django.utils import timezone
