@@ -1,6 +1,6 @@
-git+git://github.com/clouetb/cabot-alert-email.git@master#egg=cabot_alert_email
-git+git://github.com/clouetb/cabot-alert-hipchat.git@master#egg=cabot_alert_hipchat
-git+git://github.com/clouetb/cabot-alert-twilio.git@master#egg=cabot_alert_twilio
-git+git://github.com/clouetb/cabot-alert-slack.git@master#egg=cabot_alert_slack
+git+https://github.com/clouetb/cabot-alert-email.git@master#egg=cabot_alert_email
+git+https://github.com/clouetb/cabot-alert-hipchat.git@master#egg=cabot_alert_hipchat
+git+https://github.com/clouetb/cabot-alert-twilio.git@master#egg=cabot_alert_twilio
+git+https://github.com/clouetb/cabot-alert-slack.git@master#egg=cabot_alert_slack
 setuptools
 pip
