@@ -863,7 +863,7 @@ class AlertAcknowledgement(models.Model):
     cancelled_time = models.DateTimeField(null=True, blank=True)
     cancelled_user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         null=True,
         blank=True,
         related_name='cancelleduser_set'
@@ -877,7 +877,7 @@ class AlertAcknowledgement(models.Model):
 
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='profile')
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
 
     def user_data(self):
         for user_data_subclass in AlertPluginUserData.__subclasses__():
