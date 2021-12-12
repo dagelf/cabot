@@ -14,7 +14,8 @@ django-appconf
 django-auth-ldap
 django-autocomplete-light
 django-bootstrap-form
-django-compressor
+#django-compressor
+git+git://github.com/django-compressor/django-compressor.git@ce972890f017a363c63bf41ab24a923b493ae97a#egg=django-compressor
 django-filter
 django-jsonify
 django-polymorphic
