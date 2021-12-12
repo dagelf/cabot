@@ -30,12 +30,11 @@ from django.shortcuts import redirect
 from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView, \
     PasswordResetDoneView, PasswordResetConfirmView
 
-admin.autodiscover()
-
 from importlib import import_module
 import logging
 import os
 
+admin.autodiscover()
 logger = logging.getLogger(__name__)
 
 
