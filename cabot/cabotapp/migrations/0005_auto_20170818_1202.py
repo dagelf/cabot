@@ -81,7 +81,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='JenkinsCheck',
             fields=[
-                ('statuscheck_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='cabotapp.StatusCheck')),
+                ('statuscheck_ptr', models.OneToOneField(auto_created=True, on_delete=models.CASCADE, parent_link=True, primary_key=True, serialize=False, to='cabotapp.StatusCheck')),
             ],
             options={
                 'abstract': False,
@@ -101,7 +101,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='jenkinscheck',
             name='jenkins_config',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='cabotapp.JenkinsConfig'),
+            field=models.ForeignKey(on_delete=models.CASCADE, to='cabotapp.JenkinsConfig'),
         ),
         migrations.RunPython(move_old_jenkins_checks)
     ]
