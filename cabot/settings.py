@@ -148,6 +148,7 @@ INSTALLED_APPS = (
     'dal_select2',
     'django.contrib.admin',
     'bootstrapform',
+    "crispy_forms"
 )
 
 AUTH_USER_MODEL = 'auth.User'
