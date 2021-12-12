@@ -4,7 +4,7 @@ from datetime import date, datetime, timedelta
 from itertools import dropwhile, groupby, zip_longest
 
 import requests
-from alert import AlertPlugin, AlertPluginUserData
+from .alert import AlertPlugin, AlertPluginUserData
 from cabot.cabotapp import alert
 from cabot.cabotapp.utils import cabot_needs_setup
 from dateutil.relativedelta import relativedelta
@@ -28,13 +28,13 @@ from django.utils.decorators import method_decorator
 from django.utils.timezone import utc
 from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
                                   TemplateView, UpdateView, View)
-from models import (GraphiteStatusCheck, HttpStatusCheck, ICMPStatusCheck,
-                    Instance, JenkinsStatusCheck, Service, Shift, StatusCheck,
-                    StatusCheckResult, UserProfile, get_custom_check_plugins,
-                    get_duty_officers)
+from .models import (GraphiteStatusCheck, HttpStatusCheck, ICMPStatusCheck,
+                     Instance, JenkinsStatusCheck, Service, Shift, StatusCheck,
+                     StatusCheckResult, UserProfile, get_custom_check_plugins,
+                     get_duty_officers)
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from tasks import run_status_check as _run_status_check
+from .tasks import run_status_check as _run_status_check
 
 from .graphite import get_data, get_matching_metrics
 
@@ -408,6 +408,7 @@ class ServiceForm(forms.ModelForm):
         except ValidationError:
             raise ValidationError('Please specify a valid runbook link')
 
+
 class StatusCheckReportForm(forms.Form):
     service = forms.ModelChoiceField(
         queryset=Service.objects.all(),
@@ -667,7 +668,7 @@ class PluginSettingsView(LoginRequiredMixin, View):
             plugin = self.model.objects.get(title=plugin_name)
             form_model = get_object_form(type(plugin))
             form = form_model(instance=plugin)
-            alert_test_form = AlertTestPluginForm(initial = {
+            alert_test_form = AlertTestPluginForm(initial={
                 'alert_plugin': plugin
             })
 
@@ -863,10 +864,11 @@ class ServicePublicListView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ServicePublicListView, self).get_context_data(**kwargs)
-        context[self.context_object_name] = Service.objects\
-            .filter(is_public=True, alerts_enabled=True)\
+        context[self.context_object_name] = Service.objects \
+            .filter(is_public=True, alerts_enabled=True) \
             .order_by(Lower('name')).prefetch_related('status_checks')
         return context
+
 
 class InstanceDetailView(LoginRequiredMixin, CommonDetailView):
     model = Instance
@@ -1064,11 +1066,11 @@ class OnCallView(APIView):
                 plugin_data[pluginuserdata.title] = pluginuserdata.serialize()
 
             users_json.append({
-                    "username": user.username,
-                    "email": user.email,
-                    "mobile_number": user.profile.mobile_number,
-                    "plugin_data": plugin_data
-                })
+                "username": user.username,
+                "email": user.email,
+                "mobile_number": user.profile.mobile_number,
+                "plugin_data": plugin_data
+            })
 
         return Response(users_json)
 
@@ -1094,6 +1096,7 @@ def about(request):
     return render(request, 'cabotapp/about.html', {
         'cabot_version': version,
     })
+
 
 def jsonify(d):
     return HttpResponse(json.dumps(d), content_type='application/json')
