@@ -52,7 +52,7 @@ def first_time_setup_wrapper(func):
 def home_authentication_switcher(request, *args, **kwargs):
     if cabot_needs_setup():
         return redirect('first_time_setup')
-    if not request.user.is_authenticated():
+    if not request.user.is_authenticated:
         return ServicePublicListView.as_view()(request, *args, **kwargs)
     else:
         return ServiceListView.as_view()(request, *args, **kwargs)
