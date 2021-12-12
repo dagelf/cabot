@@ -21,6 +21,13 @@ if os.environ.get('CABOT_FROM_EMAIL'):
     DEFAULT_FROM_EMAIL = os.environ['CABOT_FROM_EMAIL']
 
 DATABASES = {'default': dj_database_url.config()}
+if not DATABASES['default']:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': PROJECT_ROOT + '/db.sqlite3',
+        }
+    }
 
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
@@ -276,6 +283,7 @@ AUTH_LDAP = force_bool(os.environ.get('AUTH_LDAP', False))
 
 if AUTH_LDAP:
     from settings_ldap import *
+
     AUTHENTICATION_BACKENDS += tuple(['django_auth_ldap.backend.LDAPBackend'])
 
 # Github SSO
@@ -309,7 +317,8 @@ if AUTH_GOOGLE_OAUTH2:
     AUTHENTICATION_BACKENDS += tuple(['social_core.backends.google.GoogleOAuth2'])
     SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get('AUTH_GOOGLE_OAUTH2_KEY')
     SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('AUTH_GOOGLE_OAUTH2_SECRET')
-    SOCIAL_AUTH_GOOGLE_OAUTH2_WHITELISTED_DOMAINS = os.environ.get('AUTH_GOOGLE_OAUTH2_WHITELISTED_DOMAINS', '').split(',')
+    SOCIAL_AUTH_GOOGLE_OAUTH2_WHITELISTED_DOMAINS = os.environ.get('AUTH_GOOGLE_OAUTH2_WHITELISTED_DOMAINS', '').split(
+        ',')
 
 EXPOSE_USER_API = force_bool(os.environ.get('EXPOSE_USER_API', False))
 ENABLE_SUBSCRIPTION = force_bool(os.environ.get('ENABLE_SUBSCRIPTION', True))
