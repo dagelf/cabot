@@ -168,7 +168,7 @@ urlpatterns = [
          view=PluginSettingsView.as_view(), name='plugin-settings'),
     path(r'^user/(?P<pk>\d+)/profile/(?P<alerttype>.+)/',
          view=UserProfileUpdateAlert.as_view(), name='update-alert-user-data'),
-    path(r'^admin/', include(admin.site.urls)),
+    path(r'^admin/', admin.site.urls),
     # Comment below line to disable browsable rest api
     path(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path(r'^api/', include(rest_urls.router.urls)),
