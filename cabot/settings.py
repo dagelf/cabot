@@ -161,6 +161,8 @@ for plugin in CABOT_PLUGINS_ENABLED.split(","):
 
 INSTALLED_APPS += tuple(CABOT_PLUGINS_ENABLED_PARSED)
 
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 COMPRESS_PRECOMPILERS = (
     ('text/coffeescript', 'coffee --compile --stdio'),
     ('text/eco',
