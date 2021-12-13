@@ -189,7 +189,7 @@ def append_plugin_urls():
             pass
         else:
             urlpatterns += [
-                path(r'^plugins/%s/' % plugin, include('%s.urls' % plugin))
+                re_path(r'^plugins/%s/' % plugin, include('%s.urls' % plugin))
             ]
 
 
