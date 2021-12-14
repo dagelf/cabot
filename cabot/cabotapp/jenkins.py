@@ -2,7 +2,6 @@ from datetime import datetime
 
 import jenkins
 from celery.utils.log import get_task_logger
-from django.conf import settings
 from django.utils import timezone
 
 logger = get_task_logger(__name__)

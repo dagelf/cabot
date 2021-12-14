@@ -1,13 +1,13 @@
 import datetime
+import logging
+
+import requests
+from dateutil import rrule
 from django.conf import settings
 from django.utils.timezone import now, get_current_timezone
-from dateutil import rrule
 from icalendar import Calendar
-import requests
 
-import logging
 logger = logging.getLogger(__name__)
-
 
 MAX_FUTURE = 60  # days
 

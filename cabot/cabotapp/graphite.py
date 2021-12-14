@@ -1,7 +1,8 @@
-from django.conf import settings
-import requests
 import logging
 import time
+
+import requests
+from django.conf import settings
 
 graphite_api = settings.GRAPHITE_API
 user = settings.GRAPHITE_USER
@@ -11,7 +12,6 @@ auth = (user, password)
 
 
 def get_data(target_pattern, mins_to_check=None):
-
     if mins_to_check:
         _from = '-%dminute' % mins_to_check
     else:
@@ -55,6 +55,7 @@ def get_all_metrics(limit=None):
                 metrics.append(obj['path'])
             else:
                 get_leafs_of_node(obj['path'])
+
     get_leafs_of_node('')
     return metrics
 
@@ -106,5 +107,3 @@ def validate_datapoint(datapoint, mins_to_check, utcnow):
         return True
     else:
         return False
-
-

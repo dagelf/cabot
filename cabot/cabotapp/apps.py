@@ -8,6 +8,7 @@ def post_migrate_callback(**kwargs):
     update_alert_plugins()
     create_default_jenkins_config()
 
+
 class CabotappConfig(AppConfig):
     name = 'cabot.cabotapp'
 

@@ -4,9 +4,6 @@ from datetime import date, datetime, timedelta
 from itertools import dropwhile, groupby, zip_longest
 
 import requests
-from .alert import AlertPlugin, AlertPluginUserData
-from cabot.cabotapp import alert
-from cabot.cabotapp.utils import cabot_needs_setup
 from dateutil.relativedelta import relativedelta
 from django import forms
 from django.conf import settings
@@ -16,27 +13,29 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.urls import reverse, reverse_lazy
 from django.core.validators import URLValidator
 from django.db import transaction
 from django.db.models.functions import Lower
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import redirect, render
-from django.template import RequestContext, loader
+from django.template import loader
+from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.utils.timezone import utc
 from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
                                   TemplateView, UpdateView, View)
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from cabot.cabotapp.utils import cabot_needs_setup
+from .alert import AlertPlugin, AlertPluginUserData
+from .graphite import get_data, get_matching_metrics
 from .models import (GraphiteStatusCheck, HttpStatusCheck, ICMPStatusCheck,
                      Instance, JenkinsStatusCheck, Service, Shift, StatusCheck,
                      StatusCheckResult, UserProfile, get_custom_check_plugins,
                      get_duty_officers)
-from rest_framework.views import APIView
-from rest_framework.response import Response
 from .tasks import run_status_check as _run_status_check
-
-from .graphite import get_data, get_matching_metrics
 
 
 class LoginRequiredMixin(object):

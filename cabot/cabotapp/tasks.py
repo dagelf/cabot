@@ -1,10 +1,9 @@
 import logging
 import random
+from datetime import timedelta
 
 from celery import Celery
-from django.conf import settings
 from django.utils import timezone
-from datetime import timedelta
 
 logger = logging.getLogger(__name__)
 

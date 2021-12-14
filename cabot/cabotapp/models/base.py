@@ -6,12 +6,11 @@ import time
 from datetime import timedelta
 
 import requests
-
 from celery.exceptions import SoftTimeLimitExceeded
 from celery.utils.log import get_task_logger
-from django.core.validators import URLValidator
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.core.validators import URLValidator
 from django.db import models
 from django.db.models.signals import post_save
 from django.utils import timezone
@@ -199,7 +198,7 @@ class CheckGroupMixin(models.Model):
             elif self.overall_status in (self.CRITICAL_STATUS, self.ERROR_STATUS):
                 more_important = self.old_overall_status == self.WARNING_STATUS or \
                                  (
-                                             self.old_overall_status == self.ERROR_STATUS and self.overall_status == self.CRITICAL_STATUS)
+                                         self.old_overall_status == self.ERROR_STATUS and self.overall_status == self.CRITICAL_STATUS)
                 if not more_important and self.last_alert_sent and (
                         timezone.now() - timedelta(minutes=settings.ALERT_INTERVAL)) < self.last_alert_sent:
                     return

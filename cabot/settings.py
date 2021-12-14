@@ -1,10 +1,12 @@
 import os
-import dj_database_url
 import re
+
+import dj_database_url
 from django.conf import settings
 from django.urls import reverse_lazy
-from cabot.settings_utils import environ_get_list, force_bool
+
 from cabot.cabot_config import *
+from cabot.settings_utils import environ_get_list, force_bool
 
 settings_dir = os.path.dirname(__file__)
 PROJECT_ROOT = os.path.abspath(settings_dir)

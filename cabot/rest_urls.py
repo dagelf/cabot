@@ -1,9 +1,10 @@
+import logging
+
 from django.conf import settings
 from django.contrib.auth import models as django_models
+from rest_framework import routers, serializers, viewsets
 
 from cabot.cabotapp import models, alert
-from rest_framework import routers, serializers, viewsets, mixins
-import logging
 
 logger = logging.getLogger(__name__)
 router = routers.DefaultRouter()
@@ -34,6 +35,7 @@ def create_viewset(arg_model, arg_fields, arg_read_only_fields=(), readonly=Fals
         filter_fields = arg_fields
 
     return ViewSet
+
 
 check_group_mixin_fields = (
     'name',
@@ -121,7 +123,7 @@ if settings.EXPOSE_USER_API:
             'password',
             'is_active',
             'groups',
-            #'user_permissions', # Doesn't work, removing for now
+            # 'user_permissions', # Doesn't work, removing for now
             'username',
             'first_name',
             'last_name',
@@ -137,7 +139,6 @@ if settings.EXPOSE_USER_API:
         ),
     ))
 
-
 router.register(r'shifts', create_viewset(
     arg_model=models.Shift,
     arg_fields=(
@@ -152,7 +153,7 @@ router.register(r'shifts', create_viewset(
 router.register(r'alertplugins', create_viewset(
     arg_model=alert.AlertPlugin,
     arg_fields=(
-            'title',
-        ),
+        'title',
+    ),
     readonly=True
-    ))
+))

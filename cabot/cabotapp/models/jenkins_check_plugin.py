@@ -2,8 +2,8 @@ import os
 
 from django.db import models
 
-from ..jenkins import get_job_status
 from .base import StatusCheck, StatusCheckResult
+from ..jenkins import get_job_status
 
 
 class JenkinsStatusCheck(StatusCheck):
