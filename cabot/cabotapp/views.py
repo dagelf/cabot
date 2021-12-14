@@ -146,9 +146,9 @@ class SymmetricalForm(forms.ModelForm):
             instance.save()
         if instance.pk:
             for field in self.symmetrical_fields:
-                for a_symmetrical_field in self.cleaned_data[field]:
-                    a_symmetrical_field.set(instance)
-                # setattr(instance, field, self.cleaned_data[field])
+                symmetrical_field = getattr(instance, field)
+                for symmetrical_object in self.cleaned_data[field]:
+                    symmetrical_field.add(symmetrical_object)
             self.save_m2m()
         return instance
 
