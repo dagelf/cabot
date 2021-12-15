@@ -3,7 +3,7 @@
 {% block content %}
 <h1>Delete service</h1>
 <form action="." method="post">{% csrf_token %}
-  <button type="submit" class="btn btn-danger">Delete {{ object }}</button>
+  <button type="submit" class="btn btn-danger">Delete {{ object.name }} ({{ object.id }})</button>
 </form>
 {% endblock %}
 

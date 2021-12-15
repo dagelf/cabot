@@ -283,6 +283,9 @@ class CheckGroupMixin(models.Model):
 
 
 class Service(CheckGroupMixin):
+    def __str__(self):
+        return f"Service : {self.name} ({self.id})"
+
     def update_status(self):
         self.old_overall_status = self.overall_status
         # Only active checks feed into our calculation
@@ -324,6 +327,9 @@ class Service(CheckGroupMixin):
 
 
 class Instance(CheckGroupMixin):
+    def __str__(self):
+        return f"Instance : {self.name} ({self.id})"
+
     def duplicate(self):
         checks = self.status_checks.all()
         new_instance = self
@@ -410,6 +416,8 @@ class StatusCheck(PolymorphicModel):
 
     We are using django-polymorphic for polymorphism
     """
+    def __str__(self):
+        return f"Check : {self.name} ({self.id})"
 
     # Common attributes to all
     name = models.TextField()

@@ -12,6 +12,9 @@ class AlertPlugin(PolymorphicModel):
 
     author = None
 
+    def __str__(self):
+        return f"{self.name} alert"
+
     def __unicode__(self):
         return u'%s' % (self.title)
 
