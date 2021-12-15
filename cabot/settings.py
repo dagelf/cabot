@@ -299,6 +299,7 @@ SOCIAL_AUTH_REDIRECT_IS_HTTPS = force_bool(os.environ.get('SOCIAL_AUTH_REDIRECT_
 if AUTH_SOCIAL:
     SOCIAL_AUTH_URL_NAMESPACE = 'social'
     INSTALLED_APPS += tuple(['social_django'])
+    SOCIAL_AUTH_JSONFIELD_ENABLED = True
 
 if AUTH_GITHUB_ORG:
     AUTHENTICATION_BACKENDS += tuple(['social_core.backends.github.GithubOrganizationOAuth2'])
