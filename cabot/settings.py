@@ -226,7 +226,7 @@ LOGGING = {
             'formatter': 'verbose'
         },
         'log_file': {
-            'level': 'DEBUG',
+            'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'verbose',
             'filename': os.environ.get('LOG_FILE', '/dev/null'),

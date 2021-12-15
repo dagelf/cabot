@@ -193,11 +193,9 @@ def append_plugin_urls():
 append_plugin_urls()
 
 if settings.AUTH_SOCIAL:
-    print("social")
     urlpatterns += [
         path('', include('social_django.urls', namespace='social'))
     ]
-    print("social " + urlpatterns)
 
 if settings.URL_PREFIX.strip('/'):
     urlpatterns = [
