@@ -257,7 +257,7 @@ LOGGING = {
         # Catch All Logger -- Captures any other logging
         '': {
             'handlers': ['console', 'log_file', 'mail_admins'],
-            'level': 'INFO',
+            'level': 'DEBUG',
             'propagate': True,
         }
     }
