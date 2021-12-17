@@ -5,7 +5,7 @@ billiard
 boto
 boto3
 botocore
-celery~=5.2.1
+celery[librabbitmq,auth,msgpack,gevent,tblib]
 coreapi
 coreschema
 dj-database-url
