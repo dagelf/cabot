@@ -616,15 +616,28 @@ class ICMPStatusCheck(StatusCheck):
         return "ICMP/Ping Check"
 
     def _run(self):
+        matcher = re.compile("Lost: ([0-9]+)")
         result = StatusCheckResult(status_check=self)
-        instances = self.instance_set.all()
-        target = self.instance_set.get().address
+        targets = []
+        for instance in self.instance_set.all():
+            targets.append(instance.address)
 
-        args = ['ping', '-c', '1', target]
+        args = ['nping', '-v-1', '--icmp', '-c', '1'] + targets
+        lost_count = 0
         try:
             # We redirect stderr to STDOUT because ping can write to both, depending on the kind of error.
-            subprocess.check_output(args, stderr=subprocess.STDOUT, shell=False)
-            result.succeeded = True
+            output = subprocess.run(args, stderr=subprocess.STDOUT, shell=False).stdout
+            for line in output:
+                match = matcher.match(line)
+                if match:
+                    lost_count += match.group(1)
+
+            if lost_count == 0:
+                result.succeeded = True
+            else:
+                result.succeeded = False
+                result.error = output
+
         except subprocess.CalledProcessError as e:
             result.succeeded = False
             result.error = e.output
