@@ -6,6 +6,7 @@ boto
 boto3
 botocore
 celery[auth,msgpack,gevent,tblib]
+regex
 coreapi
 coreschema
 dj-database-url

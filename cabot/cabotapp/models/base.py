@@ -1,6 +1,6 @@
 import itertools
 import json
-import re
+import regex as re
 import subprocess
 import time
 from datetime import timedelta
@@ -636,6 +636,7 @@ class ICMPStatusCheck(StatusCheck):
             else:
                 result.succeeded = False
                 result.error = output
+                result.raw_data = output
 
         except subprocess.CalledProcessError as e:
             result.succeeded = False
