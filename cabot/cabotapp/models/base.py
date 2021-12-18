@@ -616,7 +616,7 @@ class ICMPStatusCheck(StatusCheck):
         return "ICMP/Ping Check"
 
     def _run(self):
-        matcher = re.compile("Lost: ([0-9]+)")
+        regex = r".+Lost: ([0-9]+).*"
         result = StatusCheckResult(status_check=self)
         targets = []
         for instance in self.instance_set.all():
@@ -626,11 +626,10 @@ class ICMPStatusCheck(StatusCheck):
         lost_count = 0
         try:
             # We redirect stderr to STDOUT because ping can write to both, depending on the kind of error.
-            output = subprocess.run(args, stderr=subprocess.STDOUT, shell=False).stdout
-            for line in output:
-                match = matcher.match(line)
-                if match:
-                    lost_count += match.group(1)
+            output = str(subprocess.run(args, capture_output=True).stdout.decode())
+            matches = re.finditer(regex, output)
+            for line in matches:
+                lost_count += int(line.group(1))
 
             if lost_count == 0:
                 result.succeeded = True
