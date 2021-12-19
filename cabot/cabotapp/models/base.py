@@ -622,7 +622,7 @@ class ICMPStatusCheck(StatusCheck):
         for instance in self.instance_set.all():
             targets.append(instance.address)
 
-        args = ['nping', '-v-1', '--icmp', '-c', '1'] + targets
+        args = ['nping', '--icmp', '-c', '1'] + targets
         lost_count = 0
         try:
             # We redirect stderr to STDOUT because ping can write to both, depending on the kind of error.
