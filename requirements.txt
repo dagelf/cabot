@@ -5,7 +5,8 @@ billiard
 boto
 boto3
 botocore
-celery[auth,msgpack,gevent,tblib]
+#celery[auth,msgpack,gevent,tblib]
+celery
 regex
 coreapi
 coreschema
