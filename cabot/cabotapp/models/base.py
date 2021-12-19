@@ -616,32 +616,26 @@ class ICMPStatusCheck(StatusCheck):
         return "ICMP/Ping Check"
 
     def _run(self):
-        regex = r".+Lost: ([0-9]+).*"
         result = StatusCheckResult(status_check=self)
-        targets = []
-        for instance in self.instance_set.all():
-            targets.append(instance.address)
+        instances = self.instance_set.all()
+        services = self.service_set.all()
 
-        args = ['nping', '--icmp', '-c', '1'] + targets
-        lost_count = 0
-        try:
-            # We redirect stderr to STDOUT because ping can write to both, depending on the kind of error.
-            output = str(subprocess.run(args, capture_output=True).stdout.decode())
-            # Count lost packets to determine if test passed or not
-            matches = re.finditer(regex, output)
-            for line in matches:
-                lost_count += int(line.group(1))
+        if instances:
+            target = instances[0].address
+        else:
+            target = services[0].url
 
-            if lost_count == 0:
-                result.succeeded = True
-            else:
-                result.succeeded = False
-                result.error = output
-                result.raw_data = output
+        # We need to read both STDOUT and STDERR because ping can write to both, depending on the kind of error. Thanks a lot, ping.
+        ping_process = subprocess.Popen("ping -c 1 " + target, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                                        shell=True)
+        response = ping_process.wait()
 
-        except subprocess.CalledProcessError as e:
+        if response == 0:
+            result.succeeded = True
+        else:
+            output = ping_process.stdout.read()
             result.succeeded = False
-            result.error = e.output
+            result.error = output
 
         return result
 
