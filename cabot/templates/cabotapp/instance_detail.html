@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load extra %}
 {% is_app_installed "cabot_check_nping" as is_cabot_check_nping_installed %}
 {% block title %}{{ block.super }} - {{ instance.name }}{% endblock title %}
 
