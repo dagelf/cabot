@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% is_app_installed "cabot_check_nping" as is_cabot_check_nping_installed %}
 {% block title %}{{ block.super }} - {{ instance.name }}{% endblock title %}
 
 {% block content %}
@@ -82,7 +83,7 @@
 {% include 'cabotapp/_statuscheck_list.html' with checks=instance.icmp_status_checks.all instance=instance checks_type="ICMP" %}
 
 <hr>
-{% if apps.is_installed("cabot_check_nping") %}
+{% if is_cabot_check_nping_installed %}
     {% include 'cabotapp/_statuscheck_list.html' with checks=instance.nping_status_checks.all instance=instance checks_type="NPing" %}
 
     <hr>

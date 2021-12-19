@@ -16,6 +16,12 @@ def echo_setting(setting):
     return getattr(settings, setting, '')
 
 
+@register.simple_tag
+def is_app_installed(app):
+    from django.apps import apps
+    return apps.is_installed(app)
+
+
 @register.filter(name='format_timedelta')
 def format_timedelta(delta):
     # Getting rid of microseconds.
@@ -25,3 +31,5 @@ def format_timedelta(delta):
 @register.filter
 def for_service(objects, service):
     return objects.filter(service=service)
+
+
