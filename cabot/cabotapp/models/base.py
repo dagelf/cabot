@@ -375,6 +375,12 @@ class Instance(CheckGroupMixin):
     def active_icmp_status_checks(self):
         return self.icmp_status_checks().filter(active=True)
 
+    def nping_status_checks(self):
+        return self.status_checks.filter(polymorphic_ctype__model='npingstatuscheck')
+
+    def active_nping_status_checks(self):
+        return self.nping_status_checks().filter(active=True)
+
     def delete(self, *args, **kwargs):
         self.icmp_status_checks().delete()
         return super(Instance, self).delete(*args, **kwargs)
