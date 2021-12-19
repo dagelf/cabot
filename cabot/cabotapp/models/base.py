@@ -1,6 +1,6 @@
 import itertools
 import json
-import regex as re
+import re
 import subprocess
 import time
 from datetime import timedelta
@@ -627,6 +627,7 @@ class ICMPStatusCheck(StatusCheck):
         try:
             # We redirect stderr to STDOUT because ping can write to both, depending on the kind of error.
             output = str(subprocess.run(args, capture_output=True).stdout.decode())
+            # Count lost packets to determine if test passed or not
             matches = re.finditer(regex, output)
             for line in matches:
                 lost_count += int(line.group(1))
