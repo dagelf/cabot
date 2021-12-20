@@ -281,6 +281,9 @@ class CheckGroupMixin(models.Model):
     def all_failing_checks(self):
         return self.active_status_checks().exclude(calculated_status=self.CALCULATED_PASSING_STATUS)
 
+    def status_check_by_ctype(self, _polymorphic_ctype__model):
+        return self.status_checks.filter(polymorphic_ctype__model=_polymorphic_ctype__model)
+
 
 class Service(CheckGroupMixin):
     def __str__(self):

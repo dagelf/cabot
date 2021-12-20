@@ -84,10 +84,11 @@
 {% include 'cabotapp/_statuscheck_list.html' with checks=instance.icmp_status_checks.all instance=instance checks_type="ICMP" %}
 
 <hr>
-
-{% include 'cabotapp/_statuscheck_list.html' with checks=instance.nping_status_checks.all instance=instance checks_type="NPing" %}
-
+{% for checktype in custom_check_types %}
+  {% include 'cabotapp/_statuscheck_list.html' with checks=instance.status_check_by_ctype(checks_type.check_name).all instance=instance checks_type=checks_type.check_category %}
+  
 <hr>
+{% endfor %}
 
 <div class="row">
   <div class="col-xs-12">
