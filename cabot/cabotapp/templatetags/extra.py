@@ -33,3 +33,6 @@ def for_service(objects, service):
     return objects.filter(service=service)
 
 
+@register.filter
+def all_status_check_by_ctype(instance, _polymorphic_ctype__model):
+    return instance.status_check_by_ctype(_polymorphic_ctype__model + "statuscheck").all()
