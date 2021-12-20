@@ -193,6 +193,7 @@ EMAIL_USE_SSL = force_bool(environ_get_list(['EMAIL_USE_SSL', 'SES_USE_SSL'], no
 
 COMPRESS_OFFLINE = not DEBUG
 
+ENABLE_PUBLIC_VIEWS = force_bool(os.environ.get('CABOT_ENABLE_PUBLIC_VIEWS', False))
 RECOVERY_SNIPPETS_WHITELIST = (
     r'https?://[^.]+\.hackpad\.com/[^./]+\.js',
     r'https?://gist\.github\.com/[^.]+\.js',

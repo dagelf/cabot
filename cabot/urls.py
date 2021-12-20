@@ -81,8 +81,6 @@ urlpatterns = [
 
     re_path(r'^services/', view=ServiceListView.as_view(),
             name='services'),
-    re_path(r'^public/', view=ServicePublicListView.as_view(),
-            name='public'),
     re_path(r'^service/create/', view=ServiceCreateView.as_view(),
             name='create-service'),
     re_path(r'^service/update/(?P<pk>\d+)/',
@@ -172,6 +170,11 @@ urlpatterns = [
     re_path(r'^docs/',
             include_docs_urls(title="Cabot API", description="An API to create and view Cabot checks and services."))
 ]
+if settings.ENABLE_PUBLIC_VIEWS:
+        urlpatterns.append(
+                re_path(r'^public/', view=ServicePublicListView.as_view(),
+                name='public')
+        )
 
 
 def append_plugin_urls():
