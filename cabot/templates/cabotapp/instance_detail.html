@@ -85,7 +85,7 @@
 
 <hr>
 {% for checktype in custom_check_types %}
-  {% include 'cabotapp/_statuscheck_list.html' with checks=instance.status_check_by_ctype(checks_type.check_name).all instance=instance checks_type=checks_type.check_category %}
+  {% include 'cabotapp/_statuscheck_list.html' with checks=instance.status_check_by_ctype.checks_type.check_name.all instance=instance checks_type=checks_type.check_category %}
   
 <hr>
 {% endfor %}
