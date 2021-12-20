@@ -49,9 +49,9 @@ def home_authentication_switcher(request, *args, **kwargs):
     if cabot_needs_setup():
         return redirect('first_time_setup')
     if not request.user.is_authenticated:
-        return ServicePublicListView.as_view()(request, *args, **kwargs)
+        return LoginView.as_view()(request, *args, **kwargs)
     else:
-        return ServiceListView.as_view()(request, *args, **kwargs)
+        return InstanceListView.as_view()(request, *args, **kwargs)
 
 
 urlpatterns = [
