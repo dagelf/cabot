@@ -66,10 +66,20 @@ def default_calculate_debounced_passing(recent_results, debounce=0):
     return False
 
 
-def get_custom_check_plugins():
-    custom_check_types = []
-    check_subclasses = StatusCheck.__subclasses__()
+def get_all_check_plugins():
+    check_plugins = []
+    for check in StatusCheck.__subclasses__():
+        check_name = check.check_name
+        custom_check = {'creation_url': "create-" + check_name + "-check", 'check_name': check_name,
+                        'icon_class': getattr(check, "icon_class", "glyphicon-ok"), 'objects': check.objects,
+                        'check_class': check.__name__}
+        check_plugins.append(custom_check)
 
+    return check_plugins
+
+
+def get_custom_check_plugins():
+    all_check_plugins = get_all_check_plugins()
     # Checks that aren't using the plugin system
     legacy_checks = [
         "JenkinsStatusCheck",
@@ -78,17 +88,7 @@ def get_custom_check_plugins():
         "GraphiteStatusCheck",
     ]
 
-    for check in check_subclasses:
-        if check.__name__ in legacy_checks:
-            continue
-
-        check_name = check.check_name
-        custom_check = {'creation_url': "create-" + check_name + "-check", 'check_name': check_name,
-                        'icon_class': getattr(check, "icon_class", "glyphicon-ok"), 'objects': check.objects,
-                        'check_class': check.__name__}
-        custom_check_types.append(custom_check)
-
-    return custom_check_types
+    return [check for check in all_check_plugins if check['check_class'] not in legacy_checks]
 
 
 def get_check_by_name(classname):

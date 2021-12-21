@@ -34,7 +34,7 @@ from .graphite import get_data, get_matching_metrics
 from .models import (GraphiteStatusCheck, HttpStatusCheck, ICMPStatusCheck,
                      Instance, JenkinsStatusCheck, Service, Shift, StatusCheck,
                      StatusCheckResult, UserProfile, get_custom_check_plugins,
-                     get_duty_officers)
+                     get_duty_officers, get_all_check_plugins)
 from .tasks import run_status_check as _run_status_check
 
 
@@ -100,6 +100,7 @@ class BaseCommonView(object):
         if context is None:
             context = {}
         context['custom_check_types'] = get_custom_check_plugins()
+        context['all_check_types'] = get_all_check_plugins()
         return super(BaseCommonView, self).render_to_response(context, *args, **kwargs)
 
 
