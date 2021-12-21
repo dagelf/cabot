@@ -7,7 +7,7 @@
     <div class="col text-right">
       <h3>
       &nbsp;
-      <a href="{% url "create-"|add:current_check.check_name|add:"-check" %}?instance={{ instance.id }}&service={{ service.id }}" class=""><i class="glyphicon glyphicon-plus" title="Add new {{ current_check.check_name|capfirst }} check"></i><i class="glyphicon glyphicon-{{ current_check.icon_class }}" title="Add new {{ current_check.check_name|capfirst }} check"></i></a>
+      <a href="{% url "create-{{ current_check.check_name }}-check" %}?instance={{ instance.id }}&service={{ service.id }}" class=""><i class="glyphicon glyphicon-plus" title="Add new {{ current_check.check_name|capfirst }} check"></i><i class="glyphicon glyphicon-{{ current_check.icon_class }}" title="Add new {{ current_check.check_name|capfirst }} check"></i></a>
       </h3>
     </div>
   </div>
