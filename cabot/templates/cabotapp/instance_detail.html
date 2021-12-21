@@ -68,23 +68,23 @@
 
 <hr>
 
-{% include 'cabotapp/_statuscheck_list.html' with checks=instance.graphite_status_checks.all instance=instance checks_type="Graphite" %}
+{% include 'cabotapp/_statuscheck_list.html' with current_check="GraphiteStatusCheck"|check_by_classname checks=instance.graphite_status_checks.all instance=instance checks_type="Graphite" %}
 
 <hr>
 
-{% include 'cabotapp/_statuscheck_list.html' with checks=instance.http_status_checks.all instance=instance checks_type="Http" %}
+{% include 'cabotapp/_statuscheck_list.html' with current_check="HttpStatusCheck"|check_by_classname checks=instance.http_status_checks.all instance=instance checks_type="Http" %}
 
 <hr>
 
-{% include 'cabotapp/_statuscheck_list.html' with checks=instance.jenkins_status_checks.all instance=instance checks_type="Jenkins" %}
+{% include 'cabotapp/_statuscheck_list.html' with current_check="JenkinsStatusCheck"|check_by_classname checks=instance.jenkins_status_checks.all instance=instance checks_type="Jenkins" %}
 
 <hr>
 
-{% include 'cabotapp/_statuscheck_list.html' with checks=instance.icmp_status_checks.all instance=instance checks_type="ICMP" %}
+{% include 'cabotapp/_statuscheck_list.html' with current_check="ICMPStatusCheck"|check_by_classname checks=instance.icmp_status_checks.all instance=instance checks_type="ICMP" %}
 
 <hr>
 {% for checktype in custom_check_types %}
-  {% include 'cabotapp/_statuscheck_list.html' with checks=instance|all_status_check_by_ctype:checktype.check_name instance=instance checks_type=checktype.check_category %}
+{% include 'cabotapp/_statuscheck_list.html' with current_check=checktype.check_class|check_by_classname checks=instance|all_status_check_by_ctype:checktype.check_name instance=instance checks_type=checktype.check_category %}
   
 <hr>
 {% endfor %}

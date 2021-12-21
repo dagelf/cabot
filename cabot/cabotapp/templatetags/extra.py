@@ -3,6 +3,8 @@ from datetime import timedelta
 from django import template
 from django.conf import settings
 
+import cabot.cabotapp.models.base
+
 register = template.Library()
 
 
@@ -36,3 +38,8 @@ def for_service(objects, service):
 @register.filter
 def all_status_check_by_ctype(instance, _polymorphic_ctype__model):
     return instance.status_check_by_ctype(_polymorphic_ctype__model + "statuscheck").all()
+
+
+@register.filter
+def check_by_classname(class_name):
+    return cabot.cabotapp.models.base.get_check_by_name(class_name)

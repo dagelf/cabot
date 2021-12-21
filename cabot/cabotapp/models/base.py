@@ -84,10 +84,22 @@ def get_custom_check_plugins():
 
         check_name = check.check_name
         custom_check = {'creation_url': "create-" + check_name + "-check", 'check_name': check_name,
-                        'icon_class': getattr(check, "icon_class", "glyphicon-ok"), 'objects': check.objects}
+                        'icon_class': getattr(check, "icon_class", "glyphicon-ok"), 'objects': check.objects,
+                        'check_class': check.__name__}
         custom_check_types.append(custom_check)
 
     return custom_check_types
+
+
+def get_check_by_name(classname):
+    check_subclasses = StatusCheck.__subclasses__()
+    for a_class in check_subclasses:
+        if a_class.__name__ == classname:
+            check_name = a_class.check_name
+            check = {'creation_url': "create-" + check_name + "-check", 'check_name': check_name,
+                     'icon_class': getattr(a_class, "icon_class", "glyphicon-ok"), 'objects': a_class.objects,
+                     'check_class': classname}
+    return check
 
 
 class CheckGroupMixin(models.Model):
@@ -617,6 +629,9 @@ class StatusCheck(PolymorphicModel):
 
 
 class ICMPStatusCheck(StatusCheck):
+    check_name = "icmp"
+    icon_class = "transfer"
+
     class Meta(StatusCheck.Meta):
         proxy = True
 
@@ -671,6 +686,8 @@ def minimize_targets(targets):
 
 
 class GraphiteStatusCheck(StatusCheck):
+    check_name = "graphite"
+    icon_class = "signal"
     class Meta(StatusCheck.Meta):
         proxy = True
 
@@ -768,6 +785,9 @@ class GraphiteStatusCheck(StatusCheck):
 
 
 class HttpStatusCheck(StatusCheck):
+    check_name = "http"
+    icon_class = "arrow-up"
+
     class Meta(StatusCheck.Meta):
         proxy = True
 
