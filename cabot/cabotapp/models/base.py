@@ -630,7 +630,7 @@ class StatusCheck(PolymorphicModel):
 
 class ICMPStatusCheck(StatusCheck):
     check_name = "icmp"
-    icon_class = "transfer"
+    icon_class = "glyphicon glyphicon-transfer"
 
     class Meta(StatusCheck.Meta):
         proxy = True
@@ -687,7 +687,7 @@ def minimize_targets(targets):
 
 class GraphiteStatusCheck(StatusCheck):
     check_name = "graphite"
-    icon_class = "signal"
+    icon_class = "glyphicon glyphicon-signal"
     class Meta(StatusCheck.Meta):
         proxy = True
 
@@ -786,7 +786,7 @@ class GraphiteStatusCheck(StatusCheck):
 
 class HttpStatusCheck(StatusCheck):
     check_name = "http"
-    icon_class = "arrow-up"
+    icon_class = "glyphicon glyphicon-arrow-up"
 
     class Meta(StatusCheck.Meta):
         proxy = True

@@ -8,7 +8,7 @@ from ..jenkins import get_job_status
 
 class JenkinsStatusCheck(StatusCheck):
     check_name = "jenkins"
-    icon_class = "ok"
+    icon_class = "glyphicon glyphicon-ok"
     jenkins_config = models.ForeignKey('JenkinsConfig', on_delete=models.CASCADE)
 
     @property
