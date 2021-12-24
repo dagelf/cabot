@@ -36,8 +36,8 @@ def for_service(objects, service):
 
 
 @register.filter
-def all_status_check_by_ctype(instance, _polymorphic_ctype__model):
-    return instance.status_check_by_ctype(_polymorphic_ctype__model + "statuscheck").all()
+def all_status_check_by_ctype(linked_object, polymorphic_check_ctype__model):
+    return linked_object.status_check_by_ctype(polymorphic_check_ctype__model + "statuscheck").all()
 
 
 @register.filter
