@@ -9,7 +9,7 @@ from ..jenkins import get_job_status
 class JenkinsStatusCheck(StatusCheck):
     check_name = "jenkins"
     icon_class = "glyphicon glyphicon-ok"
-    jenkins_config = models.ForeignKey('JenkinsConfig', on_delete=models.CASCADE)
+    jenkins_config = models.ForeignKey("JenkinsConfig", on_delete=models.CASCADE)
 
     @property
     def check_category(self):
@@ -17,27 +17,27 @@ class JenkinsStatusCheck(StatusCheck):
 
     @property
     def failing_short_status(self):
-        return 'Job failing on Jenkins'
+        return "Job failing on Jenkins"
 
     def _run(self):
         result = StatusCheckResult(status_check=self)
         try:
             status = get_job_status(self.jenkins_config, self.name)
-            active = status['active']
-            result.job_number = status['job_number']
-            result.consecutive_failures = status['consecutive_failures']
-            if status['status_code'] == 404:
-                result.error = u'Job %s not found on Jenkins' % self.name
+            active = status["active"]
+            result.job_number = status["job_number"]
+            result.consecutive_failures = status["consecutive_failures"]
+            if status["status_code"] == 404:
+                result.error = u"Job %s not found on Jenkins" % self.name
                 result.succeeded = False
                 return result
-            elif status['status_code'] > 400:
+            elif status["status_code"] > 400:
                 # Will fall through to next block
-                raise Exception(u'returned %s' % status['status_code'])
+                raise Exception(u"returned %s" % status["status_code"])
         except Exception as e:
             # If something else goes wrong, we will *not* fail - otherwise
             # a lot of services seem to fail all at once.
             # Ugly to do it here but...
-            result.error = u'Error fetching from Jenkins - %s' % e.message
+            result.error = u"Error fetching from Jenkins - %s" % e.message
             result.succeeded = True
             return result
 
@@ -46,23 +46,29 @@ class JenkinsStatusCheck(StatusCheck):
             result.error = u'Job "%s" disabled on Jenkins' % self.name
             result.succeeded = False
         else:
-            if self.max_queued_build_time and status['blocked_build_time']:
-                if status['blocked_build_time'] > self.max_queued_build_time * 60:
+            if self.max_queued_build_time and status["blocked_build_time"]:
+                if status["blocked_build_time"] > self.max_queued_build_time * 60:
                     result.succeeded = False
-                    result.error = u'Job "%s" has blocked build waiting for %ss (> %sm)' % (
-                        self.name,
-                        int(status['blocked_build_time']),
-                        self.max_queued_build_time,
+                    result.error = (
+                        u'Job "%s" has blocked build waiting for %ss (> %sm)'
+                        % (
+                            self.name,
+                            int(status["blocked_build_time"]),
+                            self.max_queued_build_time,
+                        )
                     )
-                    result.job_number = status['queued_job_number']
+                    result.job_number = status["queued_job_number"]
                 else:
-                    result.succeeded = status['succeeded']
+                    result.succeeded = status["succeeded"]
             else:
-                result.succeeded = status['succeeded']
-            if not status['succeeded']:
-                message = u'Job "%s" failing on Jenkins (%s)' % (self.name, status['consecutive_failures'])
+                result.succeeded = status["succeeded"]
+            if not status["succeeded"]:
+                message = u'Job "%s" failing on Jenkins (%s)' % (
+                    self.name,
+                    status["consecutive_failures"],
+                )
                 if result.error:
-                    result.error += u'; %s' % message
+                    result.error += u"; %s" % message
                 else:
                     result.error = message
                 result.raw_data = status

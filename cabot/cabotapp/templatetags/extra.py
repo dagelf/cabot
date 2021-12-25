@@ -10,21 +10,22 @@ register = template.Library()
 
 @register.simple_tag
 def jenkins_human_url(jobname):
-    return '{}job/{}/'.format(settings.JENKINS_API, jobname)
+    return "{}job/{}/".format(settings.JENKINS_API, jobname)
 
 
 @register.simple_tag
 def echo_setting(setting):
-    return getattr(settings, setting, '')
+    return getattr(settings, setting, "")
 
 
 @register.simple_tag
 def is_app_installed(app):
     from django.apps import apps
+
     return apps.is_installed(app)
 
 
-@register.filter(name='format_timedelta')
+@register.filter(name="format_timedelta")
 def format_timedelta(delta):
     # Getting rid of microseconds.
     return str(timedelta(days=delta.days, seconds=delta.seconds))
@@ -37,7 +38,9 @@ def for_service(objects, service):
 
 @register.filter
 def all_status_check_by_ctype(linked_object, polymorphic_check_ctype__model):
-    return linked_object.status_check_by_ctype(polymorphic_check_ctype__model + "statuscheck").all()
+    return linked_object.status_check_by_ctype(
+        polymorphic_check_ctype__model + "statuscheck"
+    ).all()
 
 
 @register.filter

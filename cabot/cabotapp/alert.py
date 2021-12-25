@@ -16,7 +16,7 @@ class AlertPlugin(PolymorphicModel):
         return f"{self.name} alert"
 
     def __unicode__(self):
-        return u'%s' % (self.title)
+        return "%s" % (self.title)
 
     def _send_alert(self, service, users, duty_officers):
         """
@@ -41,13 +41,16 @@ class AlertPlugin(PolymorphicModel):
 
 class AlertPluginUserData(PolymorphicModel):
     title = models.CharField(max_length=30, editable=False)
-    user = models.ForeignKey('UserProfile', editable=False, on_delete=models.CASCADE)
+    user = models.ForeignKey("UserProfile", editable=False, on_delete=models.CASCADE)
 
     class Meta:
-        unique_together = ('title', 'user',)
+        unique_together = (
+            "title",
+            "user",
+        )
 
     def __unicode__(self):
-        return u'%s' % (self.title)
+        return "%s" % (self.title)
 
     def serialize(self):
         return {}
@@ -59,19 +62,19 @@ def send_alert(service, duty_officers=None):
         try:
             alert._send_alert(service, users, duty_officers)
         except Exception as e:
-            logging.exception('Could not send %s alert: %s' % (alert.name, e))
+            logging.exception("Could not send %s alert: %s" % (alert.name, e))
 
 
 def send_alert_update(service, duty_officers=None):
     users = service.users_to_notify.filter(is_active=True)
     for alert in service.alerts.filter(enabled=True):
-        if hasattr(alert, 'send_alert_update'):
+        if hasattr(alert, "send_alert_update"):
             try:
                 alert._send_alert_update(service, users, duty_officers)
             except Exception as e:
-                logger.exception('Could not send %s alert update: %s' % (alert.name, e))
+                logger.exception("Could not send %s alert update: %s" % (alert.name, e))
         else:
-            logger.warning('No send_alert_update method present for %s' % alert.name)
+            logger.warning("No send_alert_update method present for %s" % alert.name)
 
 
 def update_alert_plugins():

@@ -11,36 +11,34 @@ from cabot.settings_utils import environ_get_list, force_bool
 settings_dir = os.path.dirname(__file__)
 PROJECT_ROOT = os.path.abspath(settings_dir)
 
-DEBUG = force_bool(os.environ.get('DEBUG', False))
+DEBUG = force_bool(os.environ.get("DEBUG", False))
 
-ADMINS = (
-    ('Admin', os.environ.get('ADMIN_EMAIL', 'name@example.com')),
-)
+ADMINS = (("Admin", os.environ.get("ADMIN_EMAIL", "name@example.com")),)
 
 MANAGERS = ADMINS
 
-if os.environ.get('CABOT_FROM_EMAIL'):
-    DEFAULT_FROM_EMAIL = os.environ['CABOT_FROM_EMAIL']
+if os.environ.get("CABOT_FROM_EMAIL"):
+    DEFAULT_FROM_EMAIL = os.environ["CABOT_FROM_EMAIL"]
 
-DATABASES = {'default': dj_database_url.config()}
-if not DATABASES['default']:
+DATABASES = {"default": dj_database_url.config()}
+if not DATABASES["default"]:
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': PROJECT_ROOT + '/db.sqlite3',
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": PROJECT_ROOT + "/db.sqlite3",
         }
     }
 
-TEST_RUNNER = 'django.test.runner.DiscoverRunner'
+TEST_RUNNER = "django.test.runner.DiscoverRunner"
 
-URL_PREFIX = os.environ.get('URL_PREFIX', '/').rstrip('/')
+URL_PREFIX = os.environ.get("URL_PREFIX", "/").rstrip("/")
 
-LOGIN_URL = os.environ.get('LOGIN_URL', reverse_lazy('login'))
-LOGIN_REDIRECT_URL = reverse_lazy('services')
+LOGIN_URL = os.environ.get("LOGIN_URL", reverse_lazy("login"))
+LOGIN_REDIRECT_URL = reverse_lazy("services")
 
 USE_TZ = True
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(",")
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -49,11 +47,11 @@ ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
 # timezone as the operating system.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
-TIME_ZONE = os.environ.get('TIME_ZONE', 'Etc/UTC')
+TIME_ZONE = os.environ.get("TIME_ZONE", "Etc/UTC")
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
 SITE_ID = 1
 
@@ -67,137 +65,142 @@ USE_L10N = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media/')
+MEDIA_ROOT = os.path.join(PROJECT_ROOT, "media/")
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
-MEDIA_URL = '%s/media/' % URL_PREFIX
+MEDIA_URL = "%s/media/" % URL_PREFIX
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = os.path.join(PROJECT_ROOT, '.collectstatic/')
+STATIC_ROOT = os.path.join(PROJECT_ROOT, ".collectstatic/")
 
 COMPRESS_ROOT = STATIC_ROOT
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
-STATIC_URL = '%s/static/' % URL_PREFIX
+STATIC_URL = "%s/static/" % URL_PREFIX
 COMPRESS_URL = STATIC_URL
 
 # Additional locations of static files
-STATICFILES_DIRS = [os.path.join(PROJECT_ROOT, 'static')]
+STATICFILES_DIRS = [os.path.join(PROJECT_ROOT, "static")]
 
 if not DEBUG:
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # List of finder classes that know how to find static files in
 # various locations.
 STATICFILES_FINDERS = (
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'compressor.finders.CompressorFinder',
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+    "compressor.finders.CompressorFinder",
 )
 
-if os.environ.get('WWW_SCHEME') == 'https':
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+if os.environ.get("WWW_SCHEME") == "https":
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = os.environ.get(
-    'DJANGO_SECRET_KEY', '2FL6ORhHwr5eX34pP9mMugnIOd3jzVuT45f7w430Mt5PnEwbcJgma0q8zUXNZ68A')
+    "DJANGO_SECRET_KEY",
+    "2FL6ORhHwr5eX34pP9mMugnIOd3jzVuT45f7w430Mt5PnEwbcJgma0q8zUXNZ68A",
+)
 
 # List of callables that know how to import templates from various sources.
-TEMPLATES = [{
-    'BACKEND': 'django.template.backends.django.DjangoTemplates',
-    'DIRS': (
-        os.path.join(PROJECT_ROOT, 'templates'),
-    ),
-    'APP_DIRS': True,
-    'OPTIONS': {
-        'context_processors': [
-            'django.template.context_processors.debug',
-            'django.template.context_processors.request',
-            'django.contrib.auth.context_processors.auth',
-            'django.contrib.messages.context_processors.messages',
-            'cabot.context_processors.global_settings',
-        ],
-        'debug': force_bool(os.environ.get('TEMPLATE_DEBUG', False))
-    },
-}]
+TEMPLATES = [
+    {
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": (os.path.join(PROJECT_ROOT, "templates"),),
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+                "cabot.context_processors.global_settings",
+            ],
+            "debug": force_bool(os.environ.get("TEMPLATE_DEBUG", False)),
+        },
+    }
+]
 
 MIDDLEWARE = (
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
 )
 
-ROOT_URLCONF = 'cabot.urls'
+ROOT_URLCONF = "cabot.urls"
 INSTALLED_APPS = (
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.sites',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.sites",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-    'django_filters',
-    'compressor',
-    'polymorphic',
-    'jsonify',
-    'cabot.cabotapp',
-    'rest_framework',
-    'dal',
-    'dal_select2',
-    'django.contrib.admin',
-    'bootstrapform',
-    "crispy_forms"
+    "django_filters",
+    "compressor",
+    "polymorphic",
+    "jsonify",
+    "cabot.cabotapp",
+    "rest_framework",
+    "dal",
+    "dal_select2",
+    "django.contrib.admin",
+    "bootstrapform",
+    "crispy_forms",
 )
 
-AUTH_USER_MODEL = 'auth.User'
+AUTH_USER_MODEL = "auth.User"
 
 # Load additional apps from configuration file
 CABOT_PLUGINS_ENABLED_PARSED = []
 for plugin in CABOT_PLUGINS_ENABLED.split(","):
     # Hack to clean up if versions of plugins specified
-    exploded = re.split(r'[<>=]+', plugin)
+    exploded = re.split(r"[<>=]+", plugin)
     CABOT_PLUGINS_ENABLED_PARSED.append(exploded[0])
 
 INSTALLED_APPS += tuple(CABOT_PLUGINS_ENABLED_PARSED)
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 COMPRESS_PRECOMPILERS = (
-    ('text/coffeescript', 'coffee --compile --stdio'),
-    ('text/eco',
-     'eco -i TEMPLATES {infile} && cat "$(echo "{infile}" | sed -e "s/\.eco$/.js/g")"'),
-    ('text/less', 'lessc {infile} > {outfile}'),
+    ("text/coffeescript", "coffee --compile --stdio"),
+    (
+        "text/eco",
+        'eco -i TEMPLATES {infile} && cat "$(echo "{infile}" | sed -e "s/\.eco$/.js/g")"',
+    ),
+    ("text/less", "lessc {infile} > {outfile}"),
 )
 
 # For the email settings we both accept old and new names
-EMAIL_HOST = environ_get_list(['EMAIL_HOST', 'SES_HOST'], 'localhost')
-EMAIL_PORT = int(environ_get_list(['EMAIL_PORT', 'SES_PORT'], 25))
-EMAIL_HOST_USER = environ_get_list(['EMAIL_USER', 'SES_USER'], '')
-EMAIL_HOST_PASSWORD = environ_get_list(['EMAIL_PASSWORD', 'SES_PASS'], '')
+EMAIL_HOST = environ_get_list(["EMAIL_HOST", "SES_HOST"], "localhost")
+EMAIL_PORT = int(environ_get_list(["EMAIL_PORT", "SES_PORT"], 25))
+EMAIL_HOST_USER = environ_get_list(["EMAIL_USER", "SES_USER"], "")
+EMAIL_HOST_PASSWORD = environ_get_list(["EMAIL_PASSWORD", "SES_PASS"], "")
 EMAIL_BACKEND = environ_get_list(
-    ['EMAIL_BACKEND', 'SES_BACKEND'],
-    'django.core.mail.backends.smtp.EmailBackend'
+    ["EMAIL_BACKEND", "SES_BACKEND"], "django.core.mail.backends.smtp.EmailBackend"
 )
-EMAIL_USE_TLS = force_bool(environ_get_list(['EMAIL_USE_TLS', 'SES_USE_TLS'], False))
-EMAIL_USE_SSL = force_bool(environ_get_list(['EMAIL_USE_SSL', 'SES_USE_SSL'], not EMAIL_USE_TLS))
+EMAIL_USE_TLS = force_bool(environ_get_list(["EMAIL_USE_TLS", "SES_USE_TLS"], False))
+EMAIL_USE_SSL = force_bool(
+    environ_get_list(["EMAIL_USE_SSL", "SES_USE_SSL"], not EMAIL_USE_TLS)
+)
 
 COMPRESS_OFFLINE = not DEBUG
 
-ENABLE_PUBLIC_VIEWS = force_bool(os.environ.get('CABOT_ENABLE_PUBLIC_VIEWS', False))
+ENABLE_PUBLIC_VIEWS = force_bool(os.environ.get("CABOT_ENABLE_PUBLIC_VIEWS", False))
 RECOVERY_SNIPPETS_WHITELIST = (
-    r'https?://[^.]+\.hackpad\.com/[^./]+\.js',
-    r'https?://gist\.github\.com/[^.]+\.js',
-    r'https?://www\.refheap\.com/[^.]+\.js',
+    r"https?://[^.]+\.hackpad\.com/[^./]+\.js",
+    r"https?://gist\.github\.com/[^.]+\.js",
+    r"https?://www\.refheap\.com/[^.]+\.js",
 )
 
 # A sample logging configuration. The only tangible logging
@@ -206,124 +209,139 @@ RECOVERY_SNIPPETS_WHITELIST = (
 # See http://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': True,
-    'formatters': {
-        'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+    "version": 1,
+    "disable_existing_loggers": True,
+    "formatters": {
+        "verbose": {
+            "format": "%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s"
         },
-        'simple': {
-            'format': '%(levelname)s %(message)s'
+        "simple": {"format": "%(levelname)s %(message)s"},
+    },
+    "handlers": {
+        "null": {
+            "level": "DEBUG",
+            "class": "logging.NullHandler",
+        },
+        "console": {
+            "level": "DEBUG",
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
+        "log_file": {
+            "level": "INFO",
+            "class": "logging.handlers.RotatingFileHandler",
+            "formatter": "verbose",
+            "filename": os.environ.get("LOG_FILE", "/dev/null"),
+            "maxBytes": 1024 * 1024 * 25,  # 25 MB
+            "backupCount": 5,
+        },
+        "mail_admins": {
+            "level": "ERROR",
+            "class": "django.utils.log.AdminEmailHandler",
         },
     },
-    'handlers': {
-        'null': {
-            'level': 'DEBUG',
-            'class': 'logging.NullHandler',
+    "loggers": {
+        "django": {
+            "handlers": ["console", "log_file", "mail_admins"],
+            "level": "INFO",
+            "propagate": True,
         },
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-            'formatter': 'verbose'
+        "django.request": {
+            "handlers": ["console", "log_file", "mail_admins"],
+            "level": "ERROR",
+            "propagate": False,
         },
-        'log_file': {
-            'level': 'INFO',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'formatter': 'verbose',
-            'filename': os.environ.get('LOG_FILE', '/dev/null'),
-            'maxBytes': 1024 * 1024 * 25,  # 25 MB
-            'backupCount': 5,
-        },
-        'mail_admins': {
-            'level': 'ERROR',
-            'class': 'django.utils.log.AdminEmailHandler'
-        }
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['console', 'log_file', 'mail_admins'],
-            'level': 'INFO',
-            'propagate': True,
-        },
-        'django.request': {
-            'handlers': ['console', 'log_file', 'mail_admins'],
-            'level': 'ERROR',
-            'propagate': False,
-        },
-        'django.db.backends': {
-            'handlers': ['console', 'log_file', 'mail_admins'],
-            'level': 'INFO',
-            'propagate': False,
+        "django.db.backends": {
+            "handlers": ["console", "log_file", "mail_admins"],
+            "level": "INFO",
+            "propagate": False,
         },
         # Catch All Logger -- Captures any other logging
-        '': {
-            'handlers': ['console', 'log_file', 'mail_admins'],
-            'level': 'DEBUG',
-            'propagate': True,
-        }
-    }
+        "": {
+            "handlers": ["console", "log_file", "mail_admins"],
+            "level": "DEBUG",
+            "propagate": True,
+        },
+    },
 }
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework.authentication.BasicAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
     ),
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissions',
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.DjangoModelPermissions",
     ],
-    'DEFAULT_FILTER_BACKENDS': [
-        'django_filters.rest_framework.DjangoFilterBackend',
-        'rest_framework.filters.OrderingFilter',
-    ]
+    "DEFAULT_FILTER_BACKENDS": [
+        "django_filters.rest_framework.DjangoFilterBackend",
+        "rest_framework.filters.OrderingFilter",
+    ],
 }
 
-AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',
-)
+AUTHENTICATION_BACKENDS = ("django.contrib.auth.backends.ModelBackend",)
 
-AUTH_LDAP = force_bool(os.environ.get('AUTH_LDAP', False))
+AUTH_LDAP = force_bool(os.environ.get("AUTH_LDAP", False))
 
 if AUTH_LDAP:
     from settings_ldap import *
 
-    AUTHENTICATION_BACKENDS += tuple(['django_auth_ldap.backend.LDAPBackend'])
+    AUTHENTICATION_BACKENDS += tuple(["django_auth_ldap.backend.LDAPBackend"])
 
 # Github SSO
-AUTH_GITHUB_ENTERPRISE_ORG = force_bool(os.environ.get('AUTH_GITHUB_ENTERPRISE_ORG', False))
-AUTH_GITHUB_ORG = force_bool(os.environ.get('AUTH_GITHUB_ORG', False))
-AUTH_GOOGLE_OAUTH2 = force_bool(os.environ.get('AUTH_GOOGLE_OAUTH2', False))
+AUTH_GITHUB_ENTERPRISE_ORG = force_bool(
+    os.environ.get("AUTH_GITHUB_ENTERPRISE_ORG", False)
+)
+AUTH_GITHUB_ORG = force_bool(os.environ.get("AUTH_GITHUB_ORG", False))
+AUTH_GOOGLE_OAUTH2 = force_bool(os.environ.get("AUTH_GOOGLE_OAUTH2", False))
 
 AUTH_SOCIAL = AUTH_GITHUB_ORG or AUTH_GITHUB_ENTERPRISE_ORG or AUTH_GOOGLE_OAUTH2
-SOCIAL_AUTH_REDIRECT_IS_HTTPS = force_bool(os.environ.get('SOCIAL_AUTH_REDIRECT_IS_HTTPS', False))
+SOCIAL_AUTH_REDIRECT_IS_HTTPS = force_bool(
+    os.environ.get("SOCIAL_AUTH_REDIRECT_IS_HTTPS", False)
+)
 
 if AUTH_SOCIAL:
-    SOCIAL_AUTH_URL_NAMESPACE = 'social'
-    INSTALLED_APPS += tuple(['social_django'])
+    SOCIAL_AUTH_URL_NAMESPACE = "social"
+    INSTALLED_APPS += tuple(["social_django"])
     SOCIAL_AUTH_JSONFIELD_ENABLED = True
 
 if AUTH_GITHUB_ORG:
-    AUTHENTICATION_BACKENDS += tuple(['social_core.backends.github.GithubOrganizationOAuth2'])
-    SOCIAL_AUTH_GITHUB_ORG_KEY = os.environ.get('AUTH_GITHUB_ORG_CLIENT_ID')
-    SOCIAL_AUTH_GITHUB_ORG_SECRET = os.environ.get('AUTH_GITHUB_ORG_CLIENT_SECRET')
-    SOCIAL_AUTH_GITHUB_ORG_NAME = os.environ.get('AUTH_GITHUB_ORG_NAME')
-    SOCIAL_AUTH_GITHUB_ORG_SCOPE = ['read:org']
+    AUTHENTICATION_BACKENDS += tuple(
+        ["social_core.backends.github.GithubOrganizationOAuth2"]
+    )
+    SOCIAL_AUTH_GITHUB_ORG_KEY = os.environ.get("AUTH_GITHUB_ORG_CLIENT_ID")
+    SOCIAL_AUTH_GITHUB_ORG_SECRET = os.environ.get("AUTH_GITHUB_ORG_CLIENT_SECRET")
+    SOCIAL_AUTH_GITHUB_ORG_NAME = os.environ.get("AUTH_GITHUB_ORG_NAME")
+    SOCIAL_AUTH_GITHUB_ORG_SCOPE = ["read:org"]
 
 if AUTH_GITHUB_ENTERPRISE_ORG:
-    AUTHENTICATION_BACKENDS += tuple(['social_core.backends.github_enterprise.GithubEnterpriseOrganizationOAuth2'])
-    SOCIAL_AUTH_GITHUB_ENTERPRISE_ORG_URL = os.environ.get('AUTH_GITHUB_ENTERPRISE_ORG_URL')
-    SOCIAL_AUTH_GITHUB_ENTERPRISE_ORG_API_URL = os.environ.get('AUTH_GITHUB_ENTERPRISE_ORG_API_URL')
-    SOCIAL_AUTH_GITHUB_ENTERPRISE_ORG_KEY = os.environ.get('AUTH_GITHUB_ENTERPRISE_ORG_CLIENT_ID')
-    SOCIAL_AUTH_GITHUB_ENTERPRISE_ORG_SECRET = os.environ.get('AUTH_GITHUB_ENTERPRISE_ORG_CLIENT_SECRET')
-    SOCIAL_AUTH_GITHUB_ENTERPRISE_ORG_NAME = os.environ.get('AUTH_GITHUB_ENTERPRISE_ORG_NAME')
+    AUTHENTICATION_BACKENDS += tuple(
+        ["social_core.backends.github_enterprise.GithubEnterpriseOrganizationOAuth2"]
+    )
+    SOCIAL_AUTH_GITHUB_ENTERPRISE_ORG_URL = os.environ.get(
+        "AUTH_GITHUB_ENTERPRISE_ORG_URL"
+    )
+    SOCIAL_AUTH_GITHUB_ENTERPRISE_ORG_API_URL = os.environ.get(
+        "AUTH_GITHUB_ENTERPRISE_ORG_API_URL"
+    )
+    SOCIAL_AUTH_GITHUB_ENTERPRISE_ORG_KEY = os.environ.get(
+        "AUTH_GITHUB_ENTERPRISE_ORG_CLIENT_ID"
+    )
+    SOCIAL_AUTH_GITHUB_ENTERPRISE_ORG_SECRET = os.environ.get(
+        "AUTH_GITHUB_ENTERPRISE_ORG_CLIENT_SECRET"
+    )
+    SOCIAL_AUTH_GITHUB_ENTERPRISE_ORG_NAME = os.environ.get(
+        "AUTH_GITHUB_ENTERPRISE_ORG_NAME"
+    )
 
 if AUTH_GOOGLE_OAUTH2:
-    AUTHENTICATION_BACKENDS += tuple(['social_core.backends.google.GoogleOAuth2'])
-    SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get('AUTH_GOOGLE_OAUTH2_KEY')
-    SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('AUTH_GOOGLE_OAUTH2_SECRET')
-    SOCIAL_AUTH_GOOGLE_OAUTH2_WHITELISTED_DOMAINS = os.environ.get('AUTH_GOOGLE_OAUTH2_WHITELISTED_DOMAINS', '').split(
-        ',')
+    AUTHENTICATION_BACKENDS += tuple(["social_core.backends.google.GoogleOAuth2"])
+    SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get("AUTH_GOOGLE_OAUTH2_KEY")
+    SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get("AUTH_GOOGLE_OAUTH2_SECRET")
+    SOCIAL_AUTH_GOOGLE_OAUTH2_WHITELISTED_DOMAINS = os.environ.get(
+        "AUTH_GOOGLE_OAUTH2_WHITELISTED_DOMAINS", ""
+    ).split(",")
 
-EXPOSE_USER_API = force_bool(os.environ.get('EXPOSE_USER_API', False))
-ENABLE_SUBSCRIPTION = force_bool(os.environ.get('ENABLE_SUBSCRIPTION', True))
-ENABLE_DUTY_ROTA = force_bool(os.environ.get('ENABLE_DUTY_ROTA', True))
+EXPOSE_USER_API = force_bool(os.environ.get("EXPOSE_USER_API", False))
+ENABLE_SUBSCRIPTION = force_bool(os.environ.get("ENABLE_SUBSCRIPTION", True))
+ENABLE_DUTY_ROTA = force_bool(os.environ.get("ENABLE_DUTY_ROTA", True))

@@ -7,12 +7,13 @@ from django.utils import timezone
 
 logger = logging.getLogger(__name__)
 
-app = Celery('core')
+app = Celery("core")
 
 
 @app.task(ignore_result=True)
 def run_status_check(check_or_id):
     from .models import StatusCheck
+
     if not isinstance(check_or_id, StatusCheck):
         check = StatusCheck.objects.get(id=check_or_id)
     else:
@@ -25,6 +26,7 @@ def run_status_check(check_or_id):
 def run_all_checks():
     from .models import StatusCheck
     from datetime import timedelta
+
     checks = StatusCheck.objects.all()
     seconds = range(60)
     for check in checks:
@@ -32,7 +34,7 @@ def run_all_checks():
             next_schedule = check.last_run + timedelta(minutes=check.frequency)
         if (not check.last_run) or timezone.now() > next_schedule:
             delay = random.choice(seconds)
-            logger.debug('Scheduling task for %s seconds from now' % delay)
+            logger.debug("Scheduling task for %s seconds from now" % delay)
             run_status_check.apply_async((check.id,), countdown=delay)
 
 
@@ -45,6 +47,7 @@ def update_services(ignore_result=True):
 @app.task(ignore_result=True)
 def update_service(service_or_id):
     from .models import Service
+
     if not isinstance(service_or_id, Service):
         service = Service.objects.get(id=service_or_id)
     else:
@@ -55,6 +58,7 @@ def update_service(service_or_id):
 @app.task(ignore_result=True)
 def update_instance(instance_or_id):
     from .models import Instance
+
     if not isinstance(instance_or_id, Instance):
         instance = Instance.objects.get(id=instance_or_id)
     else:
@@ -65,6 +69,7 @@ def update_instance(instance_or_id):
 @app.task(ignore_result=True)
 def update_shifts():
     from .models import update_shifts as _update_shifts
+
     _update_shifts()
 
 
@@ -77,19 +82,21 @@ def clean_db(days_to_retain=7, batch_size=10000):
     """
     from .models import StatusCheckResult, ServiceStatusSnapshot, InstanceStatusSnapshot
 
-    to_discard_results = StatusCheckResult.objects.order_by('time_complete').filter(
+    to_discard_results = StatusCheckResult.objects.order_by("time_complete").filter(
         time_complete__lte=timezone.now() - timedelta(days=days_to_retain)
     )
-    to_discard_service = ServiceStatusSnapshot.objects.order_by('time').filter(
+    to_discard_service = ServiceStatusSnapshot.objects.order_by("time").filter(
         time__lte=timezone.now() - timedelta(days=days_to_retain)
     )
-    to_discard_instance = InstanceStatusSnapshot.objects.order_by('time').filter(
+    to_discard_instance = InstanceStatusSnapshot.objects.order_by("time").filter(
         time__lte=timezone.now() - timedelta(days=days_to_retain)
     )
 
-    result_ids = to_discard_results[:batch_size].values_list('id', flat=True)
-    service_snapshot_ids = to_discard_service[:batch_size].values_list('id', flat=True)
-    instance_snapshot_ids = to_discard_instance[:batch_size].values_list('id', flat=True)
+    result_ids = to_discard_results[:batch_size].values_list("id", flat=True)
+    service_snapshot_ids = to_discard_service[:batch_size].values_list("id", flat=True)
+    instance_snapshot_ids = to_discard_instance[:batch_size].values_list(
+        "id", flat=True
+    )
 
     result_count = result_ids.count()
     service_snapshot_count = service_snapshot_ids.count()
@@ -101,9 +108,11 @@ def clean_db(days_to_retain=7, batch_size=10000):
 
     # If we reached the batch size on either we need to re-queue to continue cleaning up.
     if (
-            result_count == batch_size or service_snapshot_count == batch_size or instance_snapshot_count == batch_size
+        result_count == batch_size
+        or service_snapshot_count == batch_size
+        or instance_snapshot_count == batch_size
     ):
-        clean_db.apply_async(kwargs={
-            'days_to_retain': days_to_retain,
-            'batch_size': batch_size},
-            countdown=3)
+        clean_db.apply_async(
+            kwargs={"days_to_retain": days_to_retain, "batch_size": batch_size},
+            countdown=3,
+        )
