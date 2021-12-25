@@ -11,4 +11,4 @@ task_always_eager = environ_get_list(
 backend = os.environ.get("CELERY_RESULT_BACKEND", None)
 task_default_queue = os.environ.get("CELERY_DEFAULT_QUEUE", "celery")
 
-timezone = "UTC"
+timezone = os.environ.get("TIME_ZONE", "Etc/UTC")
