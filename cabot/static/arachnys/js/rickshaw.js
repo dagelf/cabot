@@ -2019,7 +2019,7 @@ Rickshaw.Graph.HoverDetail = Rickshaw.Class.create({
     var graph = this.graph = args.graph;
 
     this.xFormatter = args.xFormatter || function(x) {
-      return new Date( x * 1000 ).toLocaleString();
+      return new Date( x * 1000 ).toString();
     };
 
     this.yFormatter = args.yFormatter || function(y) {
