@@ -2019,7 +2019,9 @@ Rickshaw.Graph.HoverDetail = Rickshaw.Class.create({
     var graph = this.graph = args.graph;
 
     this.xFormatter = args.xFormatter || function(x) {
+      console.log(">>>>>>> " + x)
       utcDate = Date.UTC( x * 1000 );
+      console.log(">>>>>>> " + utcDate)
       return new Date( utcDate ).toString();
     };
 
