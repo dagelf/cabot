@@ -1,3 +1,4 @@
+import calendar
 import itertools
 import json
 import re
@@ -291,7 +292,7 @@ class CheckGroupMixin(models.Model):
         ).order_by("time")
         snapshots = list(snapshots.values())
         for s in snapshots:
-            s["time"] = time.mktime(s["time"].timetuple())
+            s["time"] = calendar.timegm(s["time"].timetuple())
         return snapshots
 
     def graphite_status_checks(self):
