@@ -958,7 +958,7 @@ Rickshaw.Fixtures.Time = function() {
   };
 
   this.formatTime = function(d) {
-    return d.toUTCString().match(/(\d+:\d+):/)[1];
+    return d.toLocaleString().match(/(\d+:\d+):/)[1];
   };
 
   this.ceil = function(time, unit) {
@@ -1415,11 +1415,28 @@ Rickshaw.Graph.Axis.Time = function(args) {
   this.tickOffsets = function() {
 
     var domain = this.graph.x.domain();
+    var startDate = new Date(domain[0] * 1000);
+    startDate = new Date(startDate.getUTCFullYear(),
+        startDate.getUTCMonth(),
+        startDate.getUTCDate(),
+        startDate.getUTCHours(),
+        startDate.getUTCMinutes(),
+        startDate.getUTCSeconds() );
+    var endDate = new Date(domain[1] * 1000);
+    endDate = new Date(endDate.getUTCFullYear(),
+        endDate.getUTCMonth(),
+        endDate.getUTCDate(),
+        endDate.getUTCHours(),
+        endDate.getUTCMinutes(),
+        endDate.getUTCSeconds() );
+
+    startDate = Math.floor(startDate.getTime()/ 1000);
+    endDate = Math.floor(endDate.getTime()/ 1000);
 
     var unit = this.fixedTimeUnit || this.appropriateTimeUnit();
-    var count = Math.ceil((domain[1] - domain[0]) / unit.seconds);
+    var count = Math.ceil((endDate - startDate) / unit.seconds);
 
-    var runningTick = domain[0];
+    var runningTick = startDate;
 
     var offsets = [];
 
@@ -2019,9 +2036,6 @@ Rickshaw.Graph.HoverDetail = Rickshaw.Class.create({
     var graph = this.graph = args.graph;
 
     this.xFormatter = args.xFormatter || function(x) {
-      console.log("1 Raw   >>>>" + new Date( x * 1000 ).toString());
-      console.log("2 UTC   >>>>" + new Date( x * 1000 ).toUTCString());
-      console.log("3 Locale>>>>" + new Date( x * 1000 ).toLocaleString());
       return new Date( x * 1000 ).toString();
     };
 
