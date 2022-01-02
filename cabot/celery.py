@@ -23,3 +23,24 @@ app.conf.beat_schedule = {
         "schedule": timedelta(seconds=60 * 60 * 24),
     },
 }
+
+state = app.events.State()
+
+
+def announce_worker_online(event):
+    print(f"announce_worker_online {event}")
+
+
+def announce_worker_offline(event):
+    print(f"announce_worker_offline {event}")
+
+
+with app.connection() as connection:
+    recv = app.events.Receiver(
+        connection,
+        handlers={
+            "worker-online": announce_worker_online,
+            "worker-offline": announce_worker_offline,
+        },
+    )
+    recv.capture(limit=None, timeout=None, wakeup=True)
