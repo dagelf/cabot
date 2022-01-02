@@ -15,3 +15,6 @@ class CabotappConfig(AppConfig):
 
     def ready(self):
         post_migrate.connect(post_migrate_callback, sender=self)
+        from ..celery import register_events
+
+        register_events()
