@@ -157,6 +157,7 @@ INSTALLED_APPS = (
     "django.contrib.admin",
     "bootstrapform",
     "crispy_forms",
+    "django_celery_monitor",
 )
 
 AUTH_USER_MODEL = "auth.User"
