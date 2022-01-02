@@ -30,6 +30,7 @@ app.conf.beat_schedule = {
 is_running_in_server_context = bool(os.environ.get("IS_WEBSERVER", False))
 
 if is_running_in_server_context:
+    print(">>>> Registering events")
 
     def announce_worker_online(event):
         print(f"announce_worker_online {event}")
