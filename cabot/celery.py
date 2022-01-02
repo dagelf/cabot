@@ -24,8 +24,9 @@ app.conf.beat_schedule = {
     },
 }
 
+is_running_in__server_context = bool(os.environ.get("CABOT_ENVIRONMENT", False))
 
-def register_events():
+if is_running_in__server_context:
     state = app.events.State()
 
     def announce_worker_online(event):
