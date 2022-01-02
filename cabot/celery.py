@@ -24,23 +24,22 @@ app.conf.beat_schedule = {
     },
 }
 
-state = app.events.State()
 
+def register_events():
+    state = app.events.State()
 
-def announce_worker_online(event):
-    print(f"announce_worker_online {event}")
+    def announce_worker_online(event):
+        print(f"announce_worker_online {event}")
 
+    def announce_worker_offline(event):
+        print(f"announce_worker_offline {event}")
 
-def announce_worker_offline(event):
-    print(f"announce_worker_offline {event}")
-
-
-with app.connection() as connection:
-    recv = app.events.Receiver(
-        connection,
-        handlers={
-            "worker-online": announce_worker_online,
-            "worker-offline": announce_worker_offline,
-        },
-    )
-    recv.capture(limit=None, timeout=None, wakeup=True)
+    with app.connection() as connection:
+        recv = app.events.Receiver(
+            connection,
+            handlers={
+                "worker-online": announce_worker_online,
+                "worker-offline": announce_worker_offline,
+            },
+        )
+        recv.capture(limit=None, timeout=None, wakeup=True)
