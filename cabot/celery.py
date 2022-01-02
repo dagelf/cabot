@@ -25,12 +25,11 @@ app.conf.beat_schedule = {
         "schedule": timedelta(seconds=60 * 60 * 24),
     },
 }
-"""
+
 # Only run in application server context
 is_running_in_server_context = bool(os.environ.get("IS_WEBSERVER", False))
 
 if is_running_in_server_context:
-    state = app.events.State()
 
     def announce_worker_online(event):
         print(f"announce_worker_online {event}")
@@ -51,4 +50,3 @@ if is_running_in_server_context:
             },
         )
         recv.capture(limit=None, timeout=None, wakeup=True)
-"""
