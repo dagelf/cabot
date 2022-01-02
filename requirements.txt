@@ -1,4 +1,4 @@
-django_celery_monitor==1.1.1
+git+https://github.com/clouetb/django-celery-monitor.git@master#egg=django_celery_monitor
 amqp==5.0.7
 anyjson==0.3.3
 appdirs==1.4.4
@@ -10,11 +10,11 @@ bleach==4.1.0
 boto==2.49.0
 boto3==1.20.24
 botocore==1.23.24
-cabot-alert-email @ git+https://github.com/clouetb/cabot-alert-email.git@83349a0f940dc829286ebbe8de7c0d75708e6129
-cabot-alert-hipchat @ git+https://github.com/clouetb/cabot-alert-hipchat.git@674b2fa2b5991e8d9d82ceff6ae71a71abc12429
-cabot-alert-slack @ git+https://github.com/clouetb/cabot-alert-slack.git@48a1723f9d6dbf9d66325f4b30450d29ad41df3a
-cabot-alert-twilio @ git+https://github.com/clouetb/cabot-alert-twilio.git@e91b70b7944ac786d27c4dc8ae77e833bfaded79
-cabot-check-nping @ git+https://github.com/clouetb/cabot-check-nping.git@1b8e1a672d3d79b87a8401e0db5f2ad9b345551e
+git+https://github.com/clouetb/cabot-alert-email.git@master#egg=cabot-alert-email
+git+https://github.com/clouetb/cabot-alert-hipchat.git@master#egg=cabot-alert-hipchat
+git+https://github.com/clouetb/cabot-alert-twilio.git@master#egg=cabot-alert-twilio
+git+https://github.com/clouetb/cabot-alert-slack.git@master#egg=cabot-alert-slack
+git+https://github.com/clouetb/cabot-check-nping.git@main#egg=cabot-check-nping
 CacheControl==0.12.6
 celery==5.2.1
 certifi==2020.12.5
