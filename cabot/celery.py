@@ -25,7 +25,7 @@ app.conf.beat_schedule = {
 }
 
 # Only run in application server context
-is_running_in_server_context = bool(os.environ.get("CABOT_ENVIRONMENT", False))
+is_running_in_server_context = bool(os.environ.get("IS_WEBSERVER", False))
 
 if is_running_in_server_context:
     state = app.events.State()
