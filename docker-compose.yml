@@ -6,12 +6,18 @@ services:
       service: base
     env_file:
       - conf/development.env
-    command: python manage.py runserver 0.0.0.0:5001
+    command: >
+      sh -c "django-admin makemigrations --pythonpath /code --settings cabot.settings -v 3 &&
+      django-admin migrate --pythonpath /code --settings cabot.settings -v 3 &&
+      django-admin runserver --pythonpath /code 0.0.0.0:5000"
     ports:
-      - "5001:5001"
-    links:
-      - redis
-      - db
+      - "5000:5000"
+    depends_on:
+      - postgres
+      - rabbitmq
+      - worker
+      - beat
+      - events
 
   worker:
     extends:
@@ -23,9 +29,10 @@ services:
     environment:
       - SKIP_INIT=1
       - WAIT_FOR_MIGRATIONS=1
-    links:
-      - redis
-      - db
+    depends_on:
+      - postgres
+      - rabbitmq
+      - events
 
   beat:
     extends:
@@ -37,17 +44,31 @@ services:
     environment:
       - SKIP_INIT=1
       - WAIT_FOR_MIGRATIONS=1
-    links:
-      - redis
-      - db
+    depends_on:
+      - postgres
+      - rabbitmq
+      - events
 
-  redis:
-    image: redis:alpine
+  events:
+    extends:
+      file: docker-compose-base.yml
+      service: base
+    command: celery -A cabot events -l info --camera django_celery_monitor.camera.Camera
+    depends_on:
+      - postgres
+      - rabbitmq
+    restart: always
 
-  db:
+  rabbitmq:
+    image: rabbitmq:3-management
+    restart: always
+
+  postgres:
     image: postgres:alpine
+    environment:
+      - POSTGRES_PASSWORD=postgres
     volumes:
-      - datavolume:/var/lib/postgresql/data
+      - ../data:/var/lib/postgresql/data
 
 volumes:
   datavolume:
