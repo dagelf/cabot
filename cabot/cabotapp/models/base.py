@@ -3,7 +3,6 @@ import itertools
 import json
 import re
 import subprocess
-import time
 from datetime import timedelta
 
 import requests
@@ -334,6 +333,18 @@ class CheckGroupMixin(models.Model):
             polymorphic_ctype__model=_polymorphic_ctype__model
         )
 
+    def icmp_status_checks(self):
+        return self.status_checks.filter(polymorphic_ctype__model="icmpstatuscheck")
+
+    def active_icmp_status_checks(self):
+        return self.icmp_status_checks().filter(active=True)
+
+    def nping_status_checks(self):
+        return self.status_checks.filter(polymorphic_ctype__model="npingstatuscheck")
+
+    def active_nping_status_checks(self):
+        return self.nping_status_checks().filter(active=True)
+
 
 class Service(CheckGroupMixin):
     def __str__(self):
@@ -420,18 +431,6 @@ class Instance(CheckGroupMixin):
     address = models.TextField(
         blank=True, help_text="Address (IP/Hostname) of service."
     )
-
-    def icmp_status_checks(self):
-        return self.status_checks.filter(polymorphic_ctype__model="icmpstatuscheck")
-
-    def active_icmp_status_checks(self):
-        return self.icmp_status_checks().filter(active=True)
-
-    def nping_status_checks(self):
-        return self.status_checks.filter(polymorphic_ctype__model="npingstatuscheck")
-
-    def active_nping_status_checks(self):
-        return self.nping_status_checks().filter(active=True)
 
     def delete(self, *args, **kwargs):
         self.icmp_status_checks().delete()
