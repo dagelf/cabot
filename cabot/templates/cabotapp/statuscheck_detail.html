@@ -99,9 +99,9 @@
             </span>
           </td>
           <td>
-            <a href="{% url "result" pk=result.id %}">{{ result.time|localize }}</a>
+            <a href="{% url "result" pk=result.id %}">{{ result.time }}</a>
           </td>
-          <td>{{ result.time_complete|localize }}</td>
+          <td>{{ result.time_complete }}</td>
           <td>{{ result.took }}</td>
           <td>{{ result.error|default:"" }}</td>
         </tr>
