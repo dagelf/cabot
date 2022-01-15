@@ -159,6 +159,7 @@ INSTALLED_APPS = (
     "bootstrapform",
     "crispy_forms",
     "django_celery_monitor",
+    "django_celery_beat",
 )
 
 AUTH_USER_MODEL = "auth.User"

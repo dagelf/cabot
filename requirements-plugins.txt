@@ -4,3 +4,4 @@ git+https://github.com/clouetb/cabot-alert-twilio.git@master#egg=cabot-alert-twi
 git+https://github.com/clouetb/cabot-alert-slack.git@master#egg=cabot-alert-slack
 git+https://github.com/clouetb/cabot-check-nping.git@main#egg=cabot-check-nping
 git+https://github.com/clouetb/django-celery-monitor.git@master#egg=django_celery_monitor
+django-celery-beat
