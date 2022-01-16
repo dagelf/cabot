@@ -52,6 +52,7 @@
           <th>Importance</th>
           <th>Service(s)</th>
           <th>Instance(s)</th>
+          <th>Worker(s)</th>
           <th></th>
         </tr>
       </thead>
@@ -106,6 +107,18 @@
             {% endfor %}
             {% if not check.instance_set.all %}
             <span class="label label-warning">No instance</span>
+            {% endif %}
+          </td>
+          <td>
+            {% for worker in check.target_worker.all %}
+            {{ worker.name_and_status }}
+            {% if forloop.last %}
+            {% else %}
+            /
+            {% endif %}
+            {% endfor %}
+            {% if not check.target_worker.all %}
+            <span class="label label-warning">No worker</span>
             {% endif %}
           </td>
           <td class="text-right">
