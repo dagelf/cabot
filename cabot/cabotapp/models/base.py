@@ -16,6 +16,7 @@ from django.db.models.signals import post_save
 from django.utils import timezone
 from polymorphic.models import PolymorphicModel
 
+from django_celery_monitor.models import WorkerState
 from ..alert import AlertPluginUserData, send_alert, send_alert_update
 from ..calendar import get_events
 from ..graphite import parse_metric
@@ -514,6 +515,11 @@ class StatusCheck(PolymorphicModel):
     )
     last_run = models.DateTimeField(null=True)
     cached_health = models.TextField(editable=False, null=True)
+    target_worker = models.ManyToManyField(
+        WorkerState,
+        blank=True,
+        help_text="Worker which should execute the test.",
+    )
 
     # Graphite checks
     metric = models.TextField(

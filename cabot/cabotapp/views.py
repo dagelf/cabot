@@ -36,6 +36,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from cabot.cabotapp.utils import cabot_needs_setup
+from django_celery_monitor.models import WorkerState
 from .alert import AlertPlugin, AlertPluginUserData
 from .graphite import get_data, get_matching_metrics
 from .models import (
@@ -185,7 +186,7 @@ base_widgets = {
 
 
 class StatusCheckForm(SymmetricalForm):
-    symmetrical_fields = ("service_set", "instance_set")
+    symmetrical_fields = ("service_set", "instance_set", "target_worker")
 
     service_set = forms.ModelMultipleChoiceField(
         queryset=Service.objects.all(),
@@ -203,6 +204,18 @@ class StatusCheckForm(SymmetricalForm):
         queryset=Instance.objects.all(),
         required=False,
         help_text="Link to instance(s).",
+        widget=forms.SelectMultiple(
+            attrs={
+                "data-rel": "chosen",
+                "style": "width: 70%",
+            },
+        ),
+    )
+
+    target_worker = forms.ModelMultipleChoiceField(
+        queryset=WorkerState.objects.all(),
+        required=False,
+        help_text="Link to worker(s).",
         widget=forms.SelectMultiple(
             attrs={
                 "data-rel": "chosen",
