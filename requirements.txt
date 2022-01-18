@@ -1,4 +1,4 @@
-amqp==5.0.7
+amqp==5.0.9
 anyjson==0.3.3
 appdirs==1.4.4
 asgiref==3.4.1
@@ -10,7 +10,7 @@ boto==2.49.0
 boto3==1.20.24
 botocore==1.23.24
 CacheControl==0.12.6
-celery==5.2.2
+celery==5.2.3
 certifi==2020.12.5
 cffi==1.14.5
 chardet==4.0.0
@@ -65,7 +65,7 @@ jeepney==0.7.1
 Jinja2==3.0.3
 jmespath==0.10.0
 keyring==23.4.0
-kombu==5.2.2
+kombu==5.2.3
 lockfile==0.12.2
 Markdown==3.3.6
 MarkupSafe==2.0.1
