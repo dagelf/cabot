@@ -187,7 +187,7 @@ base_widgets = {
 
 
 class StatusCheckForm(SymmetricalForm):
-    symmetrical_fields = ("service_set", "instance_set", "target_worker")
+    symmetrical_fields = ("service_set", "instance_set", "target_workers")
 
     service_set = forms.ModelMultipleChoiceField(
         queryset=Service.objects.all(),
