@@ -213,7 +213,7 @@ class StatusCheckForm(SymmetricalForm):
         ),
     )
 
-    target_worker = forms.ModelMultipleChoiceField(
+    target_workers = forms.ModelMultipleChoiceField(
         queryset=WorkerState.objects.all(),
         required=False,
         help_text="Link to worker(s).",
