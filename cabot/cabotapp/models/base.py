@@ -21,6 +21,7 @@ from ..alert import AlertPluginUserData, send_alert, send_alert_update
 from ..calendar import get_events
 from ..graphite import parse_metric
 from ..tasks import update_instance, update_service
+from ...celeryconfig import CELERY_DEFAULT_QUEUE
 
 RAW_DATA_LIMIT = 5000
 
@@ -515,7 +516,7 @@ class StatusCheck(PolymorphicModel):
     )
     last_run = models.DateTimeField(null=True)
     cached_health = models.TextField(editable=False, null=True)
-    target_worker = models.ManyToManyField(
+    target_workers = models.ManyToManyField(
         WorkerState,
         blank=True,
         help_text="Worker which should execute the test.",
@@ -614,7 +615,7 @@ class StatusCheck(PolymorphicModel):
         except:
             return None
 
-    def run(self):
+    def run(self, worker_hostname=CELERY_DEFAULT_QUEUE):
         start = timezone.now()
         try:
             result = self._run()
@@ -630,6 +631,7 @@ class StatusCheck(PolymorphicModel):
         finish = timezone.now()
         result.time = start
         result.time_complete = finish
+        result.worker = worker_hostname
         result.save()
         self.last_run = finish
         self.save()
@@ -932,6 +934,7 @@ class StatusCheckResult(models.Model):
     time = models.DateTimeField(null=False, db_index=True)
     time_complete = models.DateTimeField(null=True, db_index=True)
     raw_data = models.TextField(null=True)
+    worker = models.TextField(null=True)
     succeeded = models.BooleanField(default=False)
     error = models.TextField(null=True)
 

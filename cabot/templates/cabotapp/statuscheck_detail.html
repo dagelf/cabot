@@ -85,6 +85,7 @@
       <thead>
         <tr>
           <th>Status</th>
+          <th>Worker</th>
           <th>Time started</th>
           <th>Time complete</th>
           <th>Took (ms)</th>
@@ -98,6 +99,7 @@
             <span class="label {% if result.succeeded %}label-success{% else %}label-danger{% endif %}">{{ result.status }}
             </span>
           </td>
+          <td>{{ result.worker }}</td>
           <td>
             <a href="{% url "result" pk=result.id %}">{{ result.time }}</a>
           </td>

@@ -55,6 +55,7 @@ from .models import (
     get_all_check_plugins,
 )
 from .tasks import run_status_check as _run_status_check
+from ..celeryconfig import CELERY_DEFAULT_QUEUE
 
 
 class LoginRequiredMixin(object):
@@ -513,14 +514,19 @@ class StatusCheckReportForm(forms.Form):
                 time__gte=self.cleaned_data["date_from"],
                 time__lt=self.cleaned_data["date_to"] + timedelta(days=1),
             ).order_by("time")
-            groups = dropwhile(
-                lambda item: item[0], groupby(results, key=lambda r: r.succeeded)
-            )
-            times = [next(group).time for succeeded, group in groups]
-            pairs = zip_longest(*([iter(times)] * 2))
-            check.problems = [
-                (start, end, (end or now) - start) for start, end in pairs
-            ]
+            for a_worker, a_worker_group in groupby(
+                results, key=lambda w: w.worker if w.worker else CELERY_DEFAULT_QUEUE
+            ):
+                groups = dropwhile(
+                    lambda item: item[0],
+                    groupby(a_worker_group, key=lambda r: r.succeeded),
+                )
+                times = [next(group).time for succeeded, group in groups]
+                pairs = zip_longest(*([iter(times)] * 2))
+                check.problems = [
+                    (start, end, (end or now) - start, a_worker) for start, end in pairs
+                ]
+
             if results:
                 check.success_rate = (
                     results.filter(succeeded=True).count() / float(len(results)) * 100

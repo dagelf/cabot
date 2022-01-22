@@ -37,10 +37,11 @@
             <th>Start time</th>
             <th>End time</th>
             <th>Outage duration</th>
+            <th>Worker</th>
           </tr>
         </thead>
         <tbody>
-        {% for start_time, end_time, duration in check.problems %}
+        {% for start_time, end_time, duration, worker in check.problems %}
             <tr>
             <td>
                 {{ start_time }}
@@ -50,6 +51,9 @@
             </td>
             <td>
                 {{ duration|format_timedelta }}
+            </td>
+            <td>
+                {{ worker }}
             </td>
           </tr>
         {% endfor %}

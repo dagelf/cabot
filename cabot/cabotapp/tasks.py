@@ -2,8 +2,9 @@ import logging
 import random
 from datetime import timedelta
 
-from celery import Celery
+from celery import Celery, current_task
 from django.utils import timezone
+from cabot.celeryconfig import CELERY_DEFAULT_QUEUE
 
 logger = logging.getLogger(__name__)
 
@@ -14,12 +15,14 @@ app = Celery("core")
 def run_status_check(check_or_id):
     from .models import StatusCheck
 
+    worker_hostname = current_task.request.hostname
+    logger.debug(f"Runnning check {check_or_id} on worker {worker_hostname}")
     if not isinstance(check_or_id, StatusCheck):
         check = StatusCheck.objects.get(id=check_or_id)
     else:
         check = check_or_id
     # This will call the subclass method
-    check.run()
+    check.run(worker_hostname=worker_hostname.replace("celery@", ""))
 
 
 @app.task(ignore_result=True)
@@ -33,9 +36,21 @@ def run_all_checks():
         if check.last_run:
             next_schedule = check.last_run + timedelta(minutes=check.frequency)
         if (not check.last_run) or timezone.now() > next_schedule:
-            delay = random.choice(seconds)
-            logger.debug("Scheduling task for %s seconds from now" % delay)
-            run_status_check.apply_async((check.id,), countdown=delay)
+            target_workers = [
+                target_worker.hostname.replace("celery@", "")
+                for target_worker in check.target_workers.all()
+                if target_worker.is_alive()
+            ]
+            if not target_workers:
+                target_workers.append(CELERY_DEFAULT_QUEUE)
+            for target_worker in target_workers:
+                delay = random.choice(seconds)
+                logger.debug(
+                    f"Scheduling check {check} on worker {target_worker} for {delay} seconds from now"
+                )
+                run_status_check.apply_async(
+                    (check.id,), countdown=delay, queue=target_worker
+                )
 
 
 @app.task(ignore_result=True)

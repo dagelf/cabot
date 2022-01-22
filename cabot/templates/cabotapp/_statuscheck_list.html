@@ -110,14 +110,14 @@
             {% endif %}
           </td>
           <td>
-            {% for worker in check.target_worker.all %}
+            {% for worker in check.target_workers.all %}
             {{ worker.name_and_status }}
             {% if forloop.last %}
             {% else %}
             /
             {% endif %}
             {% endfor %}
-            {% if not check.target_worker.all %}
+            {% if not check.target_workers.all %}
             <span class="label label-warning">No worker</span>
             {% endif %}
           </td>
