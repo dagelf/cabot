@@ -7,11 +7,11 @@ services:
     env_file:
       - conf/development.env
     command: >
-      sh -c "django-admin makemigrations --pythonpath /code --settings cabot.settings -v 3 &&
+      sh -c "yes | django-admin makemigrations --merge --pythonpath /code --settings cabot.settings -v 3 &&
       django-admin migrate --pythonpath /code --settings cabot.settings -v 3 &&
       django-admin runserver --pythonpath /code 0.0.0.0:5000"
     ports:
-      - "5000:5000"
+      - 5000:5000
     depends_on:
       - postgres
       - rabbitmq
@@ -25,10 +25,29 @@ services:
       service: base
     env_file:
       - conf/development.env
-    command: celery worker -A cabot --loglevel=DEBUG --concurrency=16 -Ofair
-    environment:
-      - SKIP_INIT=1
-      - WAIT_FOR_MIGRATIONS=1
+    command: >
+      celery -A cabot worker
+      --loglevel=DEBUG
+      --pool=solo
+      --hostname=test-worker
+      --queues=celery,test-worker
+    depends_on:
+      - postgres
+      - rabbitmq
+      - events
+
+  worker2:
+    extends:
+      file: docker-compose-base.yml
+      service: base
+    env_file:
+      - conf/development.env
+    command: >
+      celery -A cabot worker
+      --loglevel=DEBUG
+      --pool=solo
+      --hostname=worker2
+      --queues=worker2
     depends_on:
       - postgres
       - rabbitmq
@@ -40,10 +59,10 @@ services:
       service: base
     env_file:
       - conf/development.env
-    command: celery beat -A cabot --loglevel=DEBUG  --scheduler django_celery_beat.schedulers:DatabaseScheduler
-    environment:
-      - SKIP_INIT=1
-      - WAIT_FOR_MIGRATIONS=1
+    command: >
+      celery -A cabot beat
+      --loglevel=DEBUG
+      --scheduler django_celery_beat.schedulers:DatabaseScheduler
     depends_on:
       - postgres
       - rabbitmq
@@ -53,15 +72,20 @@ services:
     extends:
       file: docker-compose-base.yml
       service: base
-    command: celery -A cabot events -l info --camera django_celery_monitor.camera.Camera
+    command: >
+      celery -A cabot events
+      --loglevel=DEBUG
+      --camera django_celery_monitor.camera.Camera
     depends_on:
       - postgres
       - rabbitmq
     restart: always
 
   rabbitmq:
-    image: rabbitmq:3-management
+    image: rabbitmq:management
     restart: always
+    ports:
+      - 15672:15672
 
   postgres:
     image: postgres:alpine
