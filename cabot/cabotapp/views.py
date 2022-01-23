@@ -43,6 +43,7 @@ from .models import (
     GraphiteStatusCheck,
     HttpStatusCheck,
     ICMPStatusCheck,
+    NPINGStatusCheck,
     Instance,
     JenkinsStatusCheck,
     Service,
@@ -333,6 +334,47 @@ class HttpStatusCheckForm(StatusCheckForm):
         if new_password_value == "":
             new_password_value = self.initial.get("password")
         return new_password_value
+
+
+class NPINGStatusCheckForm(StatusCheckForm):
+    symmetrical_fields = ("service_set", "instance_set")
+
+    class Meta:
+        model = NPINGStatusCheck
+        fields = (
+            "name",
+            "host",
+            "nping_cmd_line_switches",
+            "count",
+            "frequency",
+            "active",
+            "importance",
+            "debounce",
+        )
+
+        widgets = dict(**base_widgets)
+        widgets.update(
+            {
+                "host": forms.TextInput(
+                    attrs={
+                        "style": "width: 100%",
+                        "placeholder": "Can be several hosts separated by space",
+                    }
+                ),
+                "nping_cmd_line_switches": forms.TextInput(
+                    attrs={
+                        "style": "width: 100%",
+                        "placeholder": "ex. --icmp",
+                    }
+                ),
+            }
+        )
+
+
+def duplicate_check(request, pk):
+    pc = StatusCheck.objects.get(pk=pk)
+    npk = pc.duplicate()
+    return HttpResponseRedirect(reverse("update-nping-check", kwargs={"pk": npk}))
 
 
 class JenkinsStatusCheckForm(StatusCheckForm):
@@ -629,6 +671,16 @@ class JenkinsCheckUpdateView(CheckUpdateView):
     def form_valid(self, form):
         form.instance.frequency = 1
         return super(JenkinsCheckUpdateView, self).form_valid(form)
+
+
+class NPINGCheckCreateView(CheckCreateView):
+    model = NPINGStatusCheck
+    form_class = NPINGStatusCheckForm
+
+
+class NPINGCheckUpdateView(CheckUpdateView):
+    model = NPINGStatusCheck
+    form_class = NPINGStatusCheckForm
 
 
 class StatusCheckListView(LoginRequiredMixin, CommonListView):

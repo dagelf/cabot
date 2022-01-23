@@ -34,6 +34,7 @@ from cabot.cabotapp.views import (
     UserProfileUpdateView,
     ShiftListView,
     subscriptions,
+    duplicate_check,
 )
 from cabot.cabotapp.views import (
     about,
@@ -51,6 +52,8 @@ from cabot.cabotapp.views import (
     GraphiteCheckUpdateView,
     HttpCheckCreateView,
     HttpCheckUpdateView,
+    NPINGCheckCreateView,
+    NPINGCheckUpdateView,
     ICMPCheckCreateView,
     ICMPCheckUpdateView,
     JenkinsCheckCreateView,
@@ -243,6 +246,21 @@ urlpatterns = [
         r"^jenkins_check/duplicate/(?P<pk>\d+)/",
         view=duplicate_jenkins_check,
         name="duplicate-jenkins-check",
+    ),
+    re_path(
+        r"^npingcheck/create/",
+        view=NPINGCheckCreateView.as_view(),
+        name="create-nping-check",
+    ),
+    re_path(
+        r"^npingcheck/update/(?P<pk>\d+)/",
+        view=NPINGCheckUpdateView.as_view(),
+        name="update-nping-check",
+    ),
+    re_path(
+        r"^npingcheck/duplicate/(?P<pk>\d+)/",
+        view=duplicate_check,
+        name="duplicate-nping-check",
     ),
     re_path(
         r"^result/(?P<pk>\d+)/",
