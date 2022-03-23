@@ -1,13 +1,14 @@
 import sys
 
-from django.core.urlresolvers import reverse, clear_url_caches
+from django.urls import reverse, clear_url_caches
 from django.conf import settings
 from django.test.utils import override_settings
-from importlib import import_module
+from importlib import import_module, reload
 
 from rest_framework import status, HTTP_HEADER_ENCODING
 
 from tests_basic import LocalTestCase
+
 
 class override_local_settings(override_settings):
     def clear_cache(self):
@@ -45,8 +46,10 @@ class override_local_settings(override_settings):
         super(override_local_settings, self).__exit__(exc_type, exc_value, traceback)
         self.clear_cache()
 
+
 def set_url_prefix_and_custom_check_plugins(prefix, plugins):
     return override_local_settings(prefix, plugins)
+
 
 class URLPrefixTestCase(LocalTestCase):
     def set_url_prefix(self, prefix):

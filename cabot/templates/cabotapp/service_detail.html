@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load extra %}
-{% load static from staticfiles %}
+{% load static %}
 
 {% block title %}{{ block.super }} - {{ service.name }}{% endblock title %}
 
@@ -93,21 +93,26 @@
 </div>
 <hr>
 
-{% include 'cabotapp/_statuscheck_list.html' with checks=service.graphite_status_checks.all service=service checks_type="Graphite" %}
+{% include 'cabotapp/_statuscheck_list.html' with current_check="GraphiteStatusCheck"|check_by_classname checks=service.graphite_status_checks.all instance=instance checks_type="Graphite" %}
 
 <hr>
 
-{% include 'cabotapp/_statuscheck_list.html' with checks=service.http_status_checks.all service=service checks_type="Http" %}
+{% include 'cabotapp/_statuscheck_list.html' with current_check="HttpStatusCheck"|check_by_classname checks=service.http_status_checks.all instance=instance checks_type="Http" %}
 
 <hr>
 
-{% include 'cabotapp/_statuscheck_list.html' with checks=service.jenkins_status_checks.all service=service checks_type="Jenkins" %}
+{% include 'cabotapp/_statuscheck_list.html' with current_check="JenkinsStatusCheck"|check_by_classname checks=service.jenkins_status_checks.all instance=instance checks_type="Jenkins" %}
 
-{% for custom_check in custom_check_types %}
 <hr>
-{% include 'cabotapp/_statuscheck_list.html' with checks=custom_check.objects|for_service:service service=service checks_type=custom_check.check_name %}
+
+{% include 'cabotapp/_statuscheck_list.html' with current_check="ICMPStatusCheck"|check_by_classname checks=service.icmp_status_checks.all instance=instance checks_type="ICMP" %}
+
+<hr>
+{% for checktype in custom_check_types %}
+{% include 'cabotapp/_statuscheck_list.html' with current_check=checktype.check_class|check_by_classname checks=service|all_status_check_by_ctype:checktype.check_name instance=instance checks_type=checktype.check_category %}
+
+<hr>
 {% endfor %}
-<hr>
 
 <div class="row">
   <div class="col-xs-12">

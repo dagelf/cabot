@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
-{% load static from staticfiles %}
+
+{% load static %}
+{% load extra %}
 {% block title %}{{ block.super }} - {{ instance.name }}{% endblock title %}
 
 {% block content %}
@@ -8,8 +10,23 @@
   <div class="col-xs-12">
     <div class="col-xs-1"><h2><i class="fa fa-desktop"></i></h2></div>
     <div class="col-xs-5"><h2><span class="break"></span>{{ instance.name }}</h2></div>
-    <div class="col-xs-4 text-right"><h2><span class="label label-{% if instance.overall_status == instance.PASSING_STATUS %}success{% else %}danger{% endif %}">{{ instance.overall_status|lower|capfirst }}</span> </h2></div>
-    <div class="col-xs-2 text-right"><h2><a class = "" href="{% url "duplicate-instance" instance.id %}"><i class="fa fa-copy"></i> </a><a class = "" href="{% url "update-instance" instance.id %}"><i class="glyphicon glyphicon-edit"></i> </a></h2></div>
+    <div class="col-xs-4 text-right">
+        <h2>
+            <span class="label label-{% if instance.overall_status == instance.PASSING_STATUS %}success{% else %}danger{% endif %}">
+            {{ instance.overall_status|lower|capfirst }}
+            </span>
+        </h2>
+    </div>
+    <div class="col-xs-2 text-right">
+        <h2>
+            <a class = "" href="{% url "duplicate-instance" instance.id %}">
+                <i class="fa fa-copy"></i>
+            </a>
+            <a class = "" href="{% url "update-instance" instance.id %}">
+                <i class="glyphicon glyphicon-edit"></i>
+            </a>
+        </h2>
+    </div>
   </div>
 </div>
 <hr>
@@ -67,21 +84,26 @@
 
 <hr>
 
-{% include 'cabotapp/_statuscheck_list.html' with checks=instance.graphite_status_checks.all instance=instance checks_type="Graphite" %}
+{% include 'cabotapp/_statuscheck_list.html' with current_check="GraphiteStatusCheck"|check_by_classname checks=instance.graphite_status_checks.all instance=instance checks_type="Graphite" %}
 
 <hr>
 
-{% include 'cabotapp/_statuscheck_list.html' with checks=instance.http_status_checks.all instance=instance checks_type="Http" %}
+{% include 'cabotapp/_statuscheck_list.html' with current_check="HttpStatusCheck"|check_by_classname checks=instance.http_status_checks.all instance=instance checks_type="Http" %}
 
 <hr>
 
-{% include 'cabotapp/_statuscheck_list.html' with checks=instance.jenkins_status_checks.all instance=instance checks_type="Jenkins" %}
+{% include 'cabotapp/_statuscheck_list.html' with current_check="JenkinsStatusCheck"|check_by_classname checks=instance.jenkins_status_checks.all instance=instance checks_type="Jenkins" %}
 
 <hr>
 
-{% include 'cabotapp/_statuscheck_list.html' with checks=instance.icmp_status_checks.all instance=instance checks_type="ICMP" %}
+{% include 'cabotapp/_statuscheck_list.html' with current_check="ICMPStatusCheck"|check_by_classname checks=instance.icmp_status_checks.all instance=instance checks_type="ICMP" %}
 
 <hr>
+{% for checktype in custom_check_types %}
+{% include 'cabotapp/_statuscheck_list.html' with current_check=checktype.check_class|check_by_classname checks=instance|all_status_check_by_ctype:checktype.check_name instance=instance checks_type=checktype.check_category %}
+  
+<hr>
+{% endfor %}
 
 <div class="row">
   <div class="col-xs-12">

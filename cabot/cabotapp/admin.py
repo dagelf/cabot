@@ -1,11 +1,18 @@
 from django.contrib import admin
-from polymorphic.admin import (PolymorphicChildModelAdmin,
-                               PolymorphicParentModelAdmin)
+from polymorphic.admin import PolymorphicChildModelAdmin, PolymorphicParentModelAdmin
 
 from .alert import AlertPlugin, AlertPluginUserData
-from .models import (AlertAcknowledgement, Instance, JenkinsConfig, Service,
-                     ServiceStatusSnapshot, Shift, StatusCheck,
-                     StatusCheckResult, UserProfile)
+from .models import (
+    AlertAcknowledgement,
+    Instance,
+    JenkinsConfig,
+    Service,
+    ServiceStatusSnapshot,
+    Shift,
+    StatusCheck,
+    StatusCheckResult,
+    UserProfile,
+)
 
 
 class StatusCheckAdmin(PolymorphicParentModelAdmin):
